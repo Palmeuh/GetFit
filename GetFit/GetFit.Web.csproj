@@ -1,8 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    <AssemblyName>GetFit.Web</AssemblyName>
+    <RootNamespace>GetFit.Web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Data\" />
+    <ProjectReference Include="..\Getfit.Domain\Getfit.Domain.csproj" />
+    <ProjectReference Include="..\GetFit.Infrastructure\GetFit.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using GetFit.Infrastructure;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure.Repositories;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace GetFit
 {
@@ -24,6 +26,7 @@ namespace GetFit
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
+            
 
             services.AddDbContext<GetFitContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("GetFitContext"))
@@ -33,6 +36,8 @@ namespace GetFit
                 .AddEntityFrameworkStores<GetFitContext>();
 
             services.AddScoped<IRepository<Excercise>, ExcerciseRepository>();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,5 +69,7 @@ namespace GetFit
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
+        
     }
 }

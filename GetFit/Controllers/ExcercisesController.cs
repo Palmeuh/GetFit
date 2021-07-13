@@ -22,7 +22,7 @@ namespace GetFit.Controllers
         // GET: Excercises
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Excercise.ToListAsync());
+            return View(_repository.GetAll());
         }
 
         // GET: Excercises/Details/5
@@ -33,8 +33,8 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var excercise = await _context.Excercise
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var excercise =  _repository.GetById(id);
+                
             if (excercise == null)
             {
                 return NotFound();
@@ -58,8 +58,10 @@ namespace GetFit.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(excercise);
-                await _context.SaveChangesAsync();
+                _repository.Add(excercise);
+
+                _repository.SaveChanges();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(excercise);
@@ -72,17 +74,17 @@ namespace GetFit.Controllers
             
             return View(_repository.GetById(id));
 
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            //var excercise = await _context.Excercise.FindAsync(id);
-            //if (excercise == null)
-            //{
-            //    return NotFound();
-            //}
-            //return View(excercise);
+            var excercise = _repository.GetById(id);
+            if (excercise == null)
+            {
+                return NotFound();
+            }
+            return View(excercise);
         }
 
         // POST: Excercises/Edit/5
@@ -138,8 +140,7 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var excercise = await _context.Excercise
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var excercise = _repository.GetById(id);
             if (excercise == null)
             {
                 return NotFound();
@@ -153,9 +154,11 @@ namespace GetFit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var excercise = await _context.Excercise.FindAsync(id);
-            _context.Excercise.Remove(excercise);
-            await _context.SaveChangesAsync();
+            var excercise = _repository.GetById(id);
+
+            _repository.Remove(excercise);
+
+            _repository.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 

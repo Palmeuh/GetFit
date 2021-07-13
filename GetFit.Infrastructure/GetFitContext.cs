@@ -6,12 +6,12 @@ namespace GetFit.Infrastructure
 {
     public class GetFitContext : IdentityDbContext<ApplicationUser>
     {
-        public GetFitContext (DbContextOptions<GetFitContext> options)
+        public GetFitContext(DbContextOptions<GetFitContext> options)
             : base(options)
         {
         }
 
-        
+
 
         public DbSet<Excercise> Excercise { get; set; }
         public DbSet<Workout> Workouts { get; set; }
