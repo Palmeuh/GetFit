@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using GetFit.Infrastructure;
 using GetFit.Domain.Models;
+using GetFit.Infrastructure.Repositories;
 
 namespace GetFit
 {
@@ -25,10 +26,13 @@ namespace GetFit
             services.AddRazorPages();
 
             services.AddDbContext<GetFitContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("GetFitContext")));
+                    options.UseSqlServer(Configuration.GetConnectionString("GetFitContext"))
+                    .EnableSensitiveDataLogging());
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<GetFitContext>();
+
+            services.AddScoped<IRepository<Excercise>, ExcerciseRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -11,6 +11,8 @@ namespace GetFit.Infrastructure
         {
         }
 
+        
+
         public DbSet<Excercise> Excercise { get; set; }
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<WorkoutProgram> WorkoutPrograms { get; set; }
