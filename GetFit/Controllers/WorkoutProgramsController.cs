@@ -1,29 +1,31 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure;
 
-
 namespace GetFit.Controllers
 {
-    public class ExcercisesController : Controller
+    public class WorkoutProgramsController : Controller
     {
         private readonly GetFitContext _context;
 
-        public ExcercisesController(GetFitContext context)
+        public WorkoutProgramsController(GetFitContext context)
         {
             _context = context;
         }
 
-        // GET: Excercises
+        // GET: WorkoutPrograms
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Excercise.ToListAsync());
+            return View(await _context.WorkoutPrograms.ToListAsync());
         }
 
-        // GET: Excercises/Details/5
+        // GET: WorkoutPrograms/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -31,39 +33,39 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var excercise = await _context.Excercise
+            var workoutProgram = await _context.WorkoutPrograms
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (excercise == null)
+            if (workoutProgram == null)
             {
                 return NotFound();
             }
 
-            return View(excercise);
+            return View(workoutProgram);
         }
 
-        // GET: Excercises/Create
+        // GET: WorkoutPrograms/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Excercises/Create
+        // POST: WorkoutPrograms/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,MuscleGroup,Description")] Excercise excercise)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description")] WorkoutProgram workoutProgram)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(excercise);
+                _context.Add(workoutProgram);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(excercise);
+            return View(workoutProgram);
         }
 
-        // GET: Excercises/Edit/5
+        // GET: WorkoutPrograms/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -71,22 +73,22 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var excercise = await _context.Excercise.FindAsync(id);
-            if (excercise == null)
+            var workoutProgram = await _context.WorkoutPrograms.FindAsync(id);
+            if (workoutProgram == null)
             {
                 return NotFound();
             }
-            return View(excercise);
+            return View(workoutProgram);
         }
 
-        // POST: Excercises/Edit/5
+        // POST: WorkoutPrograms/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,MuscleGroup,Description")] Excercise excercise)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] WorkoutProgram workoutProgram)
         {
-            if (id != excercise.Id)
+            if (id != workoutProgram.Id)
             {
                 return NotFound();
             }
@@ -95,12 +97,12 @@ namespace GetFit.Controllers
             {
                 try
                 {
-                    _context.Update(excercise);
+                    _context.Update(workoutProgram);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ExcerciseExists(excercise.Id))
+                    if (!WorkoutProgramExists(workoutProgram.Id))
                     {
                         return NotFound();
                     }
@@ -111,10 +113,10 @@ namespace GetFit.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(excercise);
+            return View(workoutProgram);
         }
 
-        // GET: Excercises/Delete/5
+        // GET: WorkoutPrograms/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -122,30 +124,30 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var excercise = await _context.Excercise
+            var workoutProgram = await _context.WorkoutPrograms
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (excercise == null)
+            if (workoutProgram == null)
             {
                 return NotFound();
             }
 
-            return View(excercise);
+            return View(workoutProgram);
         }
 
-        // POST: Excercises/Delete/5
+        // POST: WorkoutPrograms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var excercise = await _context.Excercise.FindAsync(id);
-            _context.Excercise.Remove(excercise);
+            var workoutProgram = await _context.WorkoutPrograms.FindAsync(id);
+            _context.WorkoutPrograms.Remove(workoutProgram);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ExcerciseExists(int id)
+        private bool WorkoutProgramExists(int id)
         {
-            return _context.Excercise.Any(e => e.Id == id);
+            return _context.WorkoutPrograms.Any(e => e.Id == id);
         }
     }
 }

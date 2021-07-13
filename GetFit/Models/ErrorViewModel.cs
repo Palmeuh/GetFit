@@ -1,5 +1,3 @@
-using System;
-
 namespace GetFit.Models
 {
     public class ErrorViewModel
