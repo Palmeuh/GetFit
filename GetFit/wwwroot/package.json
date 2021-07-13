@@ -1,0 +1,14 @@
+{
+  "name": "wwwroot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "compile:sass": "sass --watch scss/style.scss:css/style.css"
+  },
+  "author": "",
+  "license": "ISC"
+}
