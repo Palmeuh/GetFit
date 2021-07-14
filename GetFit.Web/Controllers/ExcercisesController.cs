@@ -11,15 +11,13 @@ namespace GetFit.Web.Controllers
 {
     public class ExcercisesController : Controller
     {
-        private readonly GetFitContext _context;
         private readonly IRepository<Excercise> _repository;
 
         public List<Excercise> Ordered { get; set; }
         public IEnumerable<Excercise> Excercises { get; set; }
 
-        public ExcercisesController(GetFitContext context, IRepository<Excercise> repository)
+        public ExcercisesController(IRepository<Excercise> repository)
         {
-            _context = context;
             _repository = repository;
         }
 
@@ -92,11 +90,7 @@ namespace GetFit.Web.Controllers
             var paginatedList = await PaginatedList<Excercise>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
 
             return View(paginatedList);
-
-            //return View(await PaginatedList<Excercise>.CreateAsync(Ordered, pageNumber ?? 1, pageSize));
-
-
-            //return View(excercises);
+          
         }
 
         // GET: Excercises/Details/5
@@ -234,7 +228,7 @@ namespace GetFit.Web.Controllers
 
         private bool ExcerciseExists(int id)
         {
-            return _context.Excercise.Any(e => e.Id == id);
+            return _repository.GetAll().Any(e => e.Id == id);
         }
     }
 }

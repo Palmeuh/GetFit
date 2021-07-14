@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -21,7 +22,7 @@ namespace GetFit.Infrastructure.Repositories
 
         public virtual IEnumerable<T> GetAll()
         {
-            return _context.Set<T>()
+            return _context.Set<T>()                
                 .ToList();
         }
 

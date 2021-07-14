@@ -22,17 +22,21 @@ namespace GetFit.Infrastructure
 
         public static async Task CreateInitialDatabaseAsync(IApplicationBuilder app)
         {
-            var excercises = ExcerciseFileReader.ReadFile(ExcerciseFilePath);
-
             var serviceScope = app.ApplicationServices.CreateScope();
             _context = serviceScope.ServiceProvider.GetRequiredService<GetFitContext>();
 
-            await _context.Database.EnsureDeletedAsync();
-            await _context.Database.EnsureCreatedAsync();
+            if (!await _context.Excercise.AnyAsync())
+            {
+                var excercises = ExcerciseFileReader.ReadFile(ExcerciseFilePath);
 
-            await GenerateExcercises();
-            await GenerateWorkouts();
-            await GenerateWorkoutPrograms();
+                await _context.Database.EnsureDeletedAsync();
+                await _context.Database.EnsureCreatedAsync();
+
+                await GenerateExcercises();
+                await GenerateWorkouts();
+                await GenerateWorkoutPrograms();
+            }
+
         }
 
 
