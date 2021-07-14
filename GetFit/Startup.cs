@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using GetFit.Infrastructure;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure.Repositories;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace GetFit
 {
