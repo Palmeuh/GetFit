@@ -27,6 +27,7 @@ namespace GetFit.Web.Controllers
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DescriptionSortParm"] = sortOrder == "description" ? "description_desc" : "description";
+            ViewData["NumberOfExcercisesSortParm"] = sortOrder == "excercises" ? "excercises_desc" : "excercises";
 
             if (!string.IsNullOrEmpty(sortOrder))
             {
@@ -74,6 +75,16 @@ namespace GetFit.Web.Controllers
                     //return View(Ordered);
                     break;
 
+                case "excercises":
+                    Ordered = Workouts.OrderBy(e => e.Excercises.Count()).ToList();
+                    //return View(Ordered);
+                    break;
+
+                case "excercises_desc":
+                    Ordered = Workouts.OrderByDescending(e => e.Excercises.Count()).ToList();
+                    //return View(Ordered);
+                    break;
+
                 default:
                     Ordered = Workouts.OrderBy(e => e.Name).ToList();
                     //return View(Ordered);
@@ -83,7 +94,7 @@ namespace GetFit.Web.Controllers
             int pageSize = 5;
 
             var paginatedList = await PaginatedList<Workout>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
-
+            
             return View(paginatedList);
 
         }
