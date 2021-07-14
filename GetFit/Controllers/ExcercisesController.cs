@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure;
 using GetFit.Infrastructure.Repositories;
+using System.Collections.Generic;
+using GetFit.Infrastructure.SearchSortFilter;
 
 namespace GetFit.Controllers
 {
@@ -12,6 +14,9 @@ namespace GetFit.Controllers
         private readonly GetFitContext _context;
         private readonly IRepository<Excercise> _repository;
 
+        public List<Excercise> Ordered { get; set; }
+        public IEnumerable<Excercise> Excercises { get; set; }
+
         public ExcercisesController(GetFitContext context, IRepository<Excercise> repository)
         {
             _context = context;
@@ -19,9 +24,81 @@ namespace GetFit.Controllers
         }
 
         // GET: Excercises
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
-            return View(_repository.GetAll());
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "name";
+            ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
+
+            if (!string.IsNullOrEmpty(sortOrder))
+            {
+                ViewData["CurrentFilter"] = currentFilter;
+            }
+            else
+            {
+                ViewData["CurrentFilter"] = searchString;
+            }
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                Excercises = _repository.GetAll()
+                    .Where(w => w.Name.Contains(searchString)
+                             || w.Description.Contains(searchString))
+                    .Distinct();
+            }
+            else
+            {
+                Excercises = _repository.GetAll();
+            }
+
+
+
+            switch (sortOrder)
+            {
+                case "name":
+                    Ordered = Excercises.OrderBy(e => e.Name).ToList();
+                    //return View(Ordered);
+                    break;
+
+                case "name_desc":
+                    Ordered = Excercises.OrderByDescending(e => e.Name).ToList();
+                    //return View(Ordered);
+                    break;
+
+                case "muscleGroup":
+                    Ordered = Excercises.OrderBy(e => e.MuscleGroup).ToList();
+                    //return View(Ordered);
+                    break;
+
+                case "muscleGroup_desc":
+                    Ordered = Excercises.OrderByDescending(e => e.MuscleGroup).ToList();
+                    //return View(Ordered);
+                    break;
+
+                default:
+                    Ordered = Excercises.OrderBy(e => e.Name).ToList();
+                    //return View(Ordered);
+                    break;
+            }
+
+            int pageSize = 30;
+
+            var paginatedList = await PaginatedList<Excercise>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
+
+            return View(paginatedList);
+
+            //return View(await PaginatedList<Excercise>.CreateAsync(Ordered, pageNumber ?? 1, pageSize));
+
+
+            //return View(excercises);
         }
 
         // GET: Excercises/Details/5
@@ -32,8 +109,8 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var excercise =  _repository.GetById(id);
-                
+            var excercise = _repository.GetById(id);
+
             if (excercise == null)
             {
                 return NotFound();
@@ -70,7 +147,7 @@ namespace GetFit.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
 
-            
+
             return View(_repository.GetById(id));
 
             if (id == null)
@@ -97,7 +174,7 @@ namespace GetFit.Controllers
             _repository.SaveChanges();
 
             return RedirectToAction("Index");
-            
+
 
             //if (id != excercise.Id)
             //{

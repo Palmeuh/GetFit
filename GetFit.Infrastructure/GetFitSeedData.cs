@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure
@@ -51,6 +52,9 @@ namespace GetFit.Infrastructure
                 };
                 excercisesToAddToDb.Add(excercise);
             }
+
+            var filtered = excercisesToAddToDb.Distinct();
+            var count = filtered.Count();
 
             await _context.Excercise.AddRangeAsync(excercisesToAddToDb);
             await _context.SaveChangesAsync();
