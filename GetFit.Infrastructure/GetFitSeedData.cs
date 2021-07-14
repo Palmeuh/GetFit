@@ -1,4 +1,6 @@
 ﻿using GetFit.Domain.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,30 +9,34 @@ using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure
 {
-    public class GetFitSeedData
+    public static class GetFitSeedData 
     {
-        private readonly GetFitContext _context;
+        
 
-        public GetFitSeedData(GetFitContext context)
+      
+
+        public static  async Task CreateInitialDatabaseAsync(IApplicationBuilder app)
         {
-            _context = context;
-        }
 
-        public async Task CreateInitialDatabaseAsync()
-        {
-            await _context.Database.EnsureDeletedAsync();
-            await _context.Database.EnsureCreatedAsync();
-
-            List<Excercise> excercises = new()
+            using(var serviceScope = app.ApplicationServices.CreateScope())
             {
-                new Excercise { Name = "Test1", MuscleGroup = "Abs", Description = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTest" },
-                new Excercise { Name = "Test2", MuscleGroup = "Legs", Description = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTest" },
-                new Excercise { Name = "Test3", MuscleGroup = "Chest", Description = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTest" }
+                var context = serviceScope.ServiceProvider.GetRequiredService<GetFitContext>();
 
-            };
+                await context.Database.EnsureDeletedAsync();
+                await context.Database.EnsureCreatedAsync();
 
-            await _context.Excercise.AddRangeAsync(excercises);
-            await _context.SaveChangesAsync();
+                List<Excercise> excercises = new()
+                {
+                    new Excercise { Name = "Test1", MuscleGroup = "Abs", Description = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTest" },
+                    new Excercise { Name = "Test2", MuscleGroup = "Legs", Description = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTest" },
+                    new Excercise { Name = "Test3", MuscleGroup = "Chest", Description = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTest" }
+
+                };
+
+                await context.Excercise.AddRangeAsync(excercises);
+                await context.SaveChangesAsync();
+            }
+            
         }
     }
 }

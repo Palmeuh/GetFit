@@ -19,9 +19,7 @@ namespace GetFit.Controllers
         }
 
         public async Task<IActionResult> IndexAsync()
-        {
-            var seedDb = new GetFitSeedData(_context);
-            await seedDb.CreateInitialDatabaseAsync();
+        {           
 
             return View();
         }

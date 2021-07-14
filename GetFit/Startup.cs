@@ -46,6 +46,7 @@ namespace GetFit
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                 GetFitSeedData.CreateInitialDatabaseAsync(app).Wait();
             }
             else
             {
@@ -68,6 +69,9 @@ namespace GetFit
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
+            
         }
 
         
