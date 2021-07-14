@@ -7,7 +7,7 @@ using GetFit.Infrastructure.Repositories;
 using System.Collections.Generic;
 using GetFit.Infrastructure.SearchSortFilter;
 
-namespace GetFit.Controllers
+namespace GetFit.Web.Controllers
 {
     public class ExcercisesController : Controller
     {
@@ -58,8 +58,6 @@ namespace GetFit.Controllers
             {
                 Excercises = _repository.GetAll();
             }
-
-
 
             switch (sortOrder)
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GetFit.Migrations
+namespace GetFit.Web.Migrations
 {
     public partial class init : Migration
     {

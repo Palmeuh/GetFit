@@ -5,24 +5,24 @@ using Microsoft.EntityFrameworkCore;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure.Repositories;
 
-namespace GetFit.Controllers
+namespace GetFit.Web.Controllers
 {
-    public class WorkoutsController : Controller
+    public class WorkoutProgramsController : Controller
     {
-        private readonly IRepository<Workout> _repository;
+        IRepository<WorkoutProgram> _repository;
 
-        public WorkoutsController(IRepository<Workout> repository)
+        public WorkoutProgramsController(IRepository<WorkoutProgram> repository)
         {
             _repository = repository;
         }
 
-        // GET: Workouts
+        // GET: WorkoutPrograms
         public async Task<IActionResult> Index()
         {
             return View(_repository.GetAll());
         }
 
-        // GET: Workouts/Details/5
+        // GET: WorkoutPrograms/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,38 +30,38 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var workout = _repository.GetById(id);
-            if (workout == null)
+            var workoutProgram = _repository.GetById(id);
+            if (workoutProgram == null)
             {
                 return NotFound();
             }
 
-            return View(workout);
+            return View(workoutProgram);
         }
 
-        // GET: Workouts/Create
+        // GET: WorkoutPrograms/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Workouts/Create
+        // POST: WorkoutPrograms/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Workout workout)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description")] WorkoutProgram workoutProgram)
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(workout);
+                _repository.Add(workoutProgram);
                 _repository.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(workout);
+            return View(workoutProgram);
         }
 
-        // GET: Workouts/Edit/5
+        // GET: WorkoutPrograms/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,22 +69,22 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var workout = _repository.GetById(id);
-            if (workout == null)
+            var workoutProgram = _repository.GetById(id);
+            if (workoutProgram == null)
             {
                 return NotFound();
             }
-            return View(workout);
+            return View(workoutProgram);
         }
 
-        // POST: Workouts/Edit/5
+        // POST: WorkoutPrograms/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Workout workout)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] WorkoutProgram workoutProgram)
         {
-            if (id != workout.Id)
+            if (id != workoutProgram.Id)
             {
                 return NotFound();
             }
@@ -93,12 +93,12 @@ namespace GetFit.Controllers
             {
                 try
                 {
-                    _repository.Edit(workout);
+                    _repository.Edit(workoutProgram);
                     _repository.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WorkoutExists(workout.Id))
+                    if (!WorkoutProgramExists(workoutProgram.Id))
                     {
                         return NotFound();
                     }
@@ -109,10 +109,10 @@ namespace GetFit.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(workout);
+            return View(workoutProgram);
         }
 
-        // GET: Workouts/Delete/5
+        // GET: WorkoutPrograms/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -120,27 +120,27 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var workout = _repository.GetById(id);
-            if (workout == null)
+            var workoutProgram = _repository.GetById(id);
+            if (workoutProgram == null)
             {
                 return NotFound();
             }
 
-            return View(workout);
+            return View(workoutProgram);
         }
 
-        // POST: Workouts/Delete/5
+        // POST: WorkoutPrograms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var workout = _repository.GetById(id);
-            _repository.Remove(workout);
+            var workoutProgram = _repository.GetById(id);
+            _repository.Remove(workoutProgram);
             _repository.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WorkoutExists(int id)
+        private bool WorkoutProgramExists(int id)
         {
             return _repository.GetAll().Any(e => e.Id == id);
         }

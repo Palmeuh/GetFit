@@ -8,7 +8,7 @@ using GetFit.Infrastructure;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure.Repositories;
 
-namespace GetFit
+namespace GetFit.Web
 {
     public class Startup
     {

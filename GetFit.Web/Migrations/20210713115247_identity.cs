@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GetFit.Migrations
+namespace GetFit.Web.Migrations
 {
     public partial class identity : Migration
     {

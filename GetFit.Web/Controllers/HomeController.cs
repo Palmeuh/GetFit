@@ -1,11 +1,11 @@
 ﻿using GetFit.Infrastructure;
-using GetFit.Models;
+using GetFit.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace GetFit.Controllers
+namespace GetFit.Web.Controllers
 {
     public class HomeController : Controller
     {

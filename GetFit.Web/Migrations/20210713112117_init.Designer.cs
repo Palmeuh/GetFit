@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GetFit.Migrations
+namespace GetFit.Web.Migrations
 {
     [DbContext(typeof(GetFitContext))]
     [Migration("20210713112117_init")]

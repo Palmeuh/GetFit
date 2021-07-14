@@ -1,4 +1,4 @@
-namespace GetFit.Models
+namespace GetFit.Web.Models
 {
     public class ErrorViewModel
     {

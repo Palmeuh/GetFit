@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace GetFit
+namespace GetFit.Web
 {
     public class Program
     {
