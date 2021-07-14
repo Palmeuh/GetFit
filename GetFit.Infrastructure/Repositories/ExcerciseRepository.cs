@@ -25,7 +25,7 @@ namespace GetFit.Infrastructure.Repositories
             excercise.MuscleGroup = entity.MuscleGroup;
             excercise.Description = entity.Description;
 
-            return base.Edit(entity);
+            return base.Edit(excercise);
 
         }
 

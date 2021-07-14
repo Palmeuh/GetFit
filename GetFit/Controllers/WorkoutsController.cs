@@ -7,22 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure;
+using GetFit.Infrastructure.Repositories;
 
 namespace GetFit.Controllers
 {
     public class WorkoutsController : Controller
     {
-        private readonly GetFitContext _context;
+        private readonly IRepository<Workout> _repository;
 
-        public WorkoutsController(GetFitContext context)
+        public WorkoutsController(IRepository<Workout> repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Workouts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Workouts.ToListAsync());
+            return View(_repository.GetAll());
         }
 
         // GET: Workouts/Details/5
@@ -33,8 +34,7 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var workout = await _context.Workouts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var workout = _repository.GetById(id);
             if (workout == null)
             {
                 return NotFound();
@@ -58,8 +58,8 @@ namespace GetFit.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(workout);
-                await _context.SaveChangesAsync();
+                _repository.Add(workout);
+                _repository.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(workout);
@@ -73,7 +73,7 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var workout = await _context.Workouts.FindAsync(id);
+            var workout = _repository.GetById(id);
             if (workout == null)
             {
                 return NotFound();
@@ -97,8 +97,8 @@ namespace GetFit.Controllers
             {
                 try
                 {
-                    _context.Update(workout);
-                    await _context.SaveChangesAsync();
+                    _repository.Edit(workout);
+                    _repository.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +124,7 @@ namespace GetFit.Controllers
                 return NotFound();
             }
 
-            var workout = await _context.Workouts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var workout = _repository.GetById(id);
             if (workout == null)
             {
                 return NotFound();
@@ -139,15 +138,15 @@ namespace GetFit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var workout = await _context.Workouts.FindAsync(id);
-            _context.Workouts.Remove(workout);
-            await _context.SaveChangesAsync();
+            var workout = _repository.GetById(id);
+            _repository.Remove(workout);
+            _repository.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         private bool WorkoutExists(int id)
         {
-            return _context.Workouts.Any(e => e.Id == id);
+            return _repository.GetAll().Any(e => e.Id == id);
         }
     }
 }

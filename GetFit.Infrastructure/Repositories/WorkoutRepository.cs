@@ -14,5 +14,17 @@ namespace GetFit.Infrastructure.Repositories
         {
 
         }
+
+        public override Workout Edit(Workout entity)
+        {
+            var workout = _context.Workouts
+                .Single(w => w.Id == entity.Id);
+
+            workout.Name = entity.Name;
+            workout.Description = entity.Description;
+
+
+            return base.Edit(workout);
+        }
     }
 }

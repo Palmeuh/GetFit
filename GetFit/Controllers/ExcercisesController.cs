@@ -94,11 +94,7 @@ namespace GetFit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,MuscleGroup,Description")] Excercise excercise)
         {
-            Excercise edit = _repository.GetById(id);
-            edit.Name = excercise.Name;
-            edit.MuscleGroup = excercise.MuscleGroup;
-            edit.Description = excercise.Description;
-
+            _repository.Edit(excercise);
             _repository.SaveChanges();
 
             return RedirectToAction("Index");
@@ -157,8 +153,8 @@ namespace GetFit.Controllers
             var excercise = _repository.GetById(id);
 
             _repository.Remove(excercise);
-
             _repository.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
 

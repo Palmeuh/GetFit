@@ -13,5 +13,19 @@ namespace GetFit.Infrastructure.Repositories
         {
 
         }
+
+        public override WorkoutProgram Edit(WorkoutProgram entity)
+        {
+
+            var workoutProgram = _context.WorkoutPrograms
+                .FirstOrDefault(e => e.Id == entity.Id);
+
+            workoutProgram.Name = entity.Name;
+            workoutProgram.Description = entity.Description;
+            
+
+            return base.Edit(workoutProgram);
+
+        }
     }
 }
