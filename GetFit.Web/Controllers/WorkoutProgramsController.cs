@@ -78,12 +78,12 @@ namespace GetFit.Web.Controllers
                     break;
 
                 case "workouts":
-                    Ordered = WorkoutPrograms.OrderBy(e => e.Workouts.Count()).ToList();
+                    Ordered = WorkoutPrograms.OrderBy(e => e.Workouts.Count).ToList();
                     //return View(Ordered);
                     break;
 
                 case "workouts_desc":
-                    Ordered = WorkoutPrograms.OrderByDescending(e => e.Workouts.Count()).ToList();
+                    Ordered = WorkoutPrograms.OrderByDescending(e => e.Workouts.Count).ToList();
                     //return View(Ordered);
                     break;
 

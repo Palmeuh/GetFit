@@ -47,9 +47,9 @@
                     </td>
                     <td>
                         @{
-                            int workoutCount = item.Workouts.Count();
+                            int workoutCount = item.Workouts.Count;
                         }
-                        @Html.DisplayFor(modelItem => workoutCount)
+                        @Html.DisplayFor(item => workoutCount)
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
