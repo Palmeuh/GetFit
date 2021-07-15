@@ -24,4 +24,8 @@
     <ProjectReference Include="..\GetFit.Infrastructure\GetFit.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\scss\components\" />
+  </ItemGroup>
+
 </Project>
