@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\scss\components\**" />
+    <Content Remove="wwwroot\scss\components\**" />
+    <EmbeddedResource Remove="wwwroot\scss\components\**" />
+    <None Remove="wwwroot\scss\components\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.6" />
@@ -22,10 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Getfit.Domain\Getfit.Domain.csproj" />
     <ProjectReference Include="..\GetFit.Infrastructure\GetFit.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\scss\components\" />
   </ItemGroup>
 
 </Project>
