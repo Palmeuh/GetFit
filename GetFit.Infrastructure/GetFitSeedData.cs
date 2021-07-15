@@ -24,13 +24,12 @@ namespace GetFit.Infrastructure
         {
             var serviceScope = app.ApplicationServices.CreateScope();
             _context = serviceScope.ServiceProvider.GetRequiredService<GetFitContext>();
+            await _context.Database.EnsureCreatedAsync();
 
             if (!await _context.Excercise.AnyAsync())
             {
                 var excercises = ExcerciseFileReader.ReadFile(ExcerciseFilePath);
 
-                await _context.Database.EnsureDeletedAsync();
-                await _context.Database.EnsureCreatedAsync();
 
                 await GenerateExcercises();
                 await GenerateWorkouts();

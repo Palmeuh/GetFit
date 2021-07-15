@@ -1,4 +1,6 @@
 ﻿using GetFit.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GetFit.Infrastructure.Repositories
@@ -8,6 +10,16 @@ namespace GetFit.Infrastructure.Repositories
         public WorkoutProgramRepository(GetFitContext context) : base(context)
         {
 
+        }
+
+        public override IEnumerable<WorkoutProgram> GetAll()
+        {
+            var workouts = _context.WorkoutPrograms
+                .Include(w => w.Workouts)
+                .ThenInclude(e => e.Excercises)
+                .ToList();
+
+            return workouts;
         }
 
         public override WorkoutProgram Edit(WorkoutProgram entity)

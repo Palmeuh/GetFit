@@ -4,12 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure.Repositories;
+using System.Collections.Generic;
+using GetFit.Infrastructure.SearchSortFilter;
 
 namespace GetFit.Web.Controllers
 {
     public class WorkoutProgramsController : Controller
     {
         IRepository<WorkoutProgram> _repository;
+        public List<WorkoutProgram> Ordered { get; set; }
+        public IEnumerable<WorkoutProgram> WorkoutPrograms { get; set; }
 
         public WorkoutProgramsController(IRepository<WorkoutProgram> repository)
         {
@@ -17,9 +21,72 @@ namespace GetFit.Web.Controllers
         }
 
         // GET: WorkoutPrograms
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
-            return View(_repository.GetAll());
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DescriptionSortParm"] = sortOrder == "description" ? "description_desc" : "muscleGroup";
+
+            if (!string.IsNullOrEmpty(sortOrder))
+            {
+                ViewData["CurrentFilter"] = currentFilter;
+            }
+            else
+            {
+                ViewData["CurrentFilter"] = searchString;
+            }
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                WorkoutPrograms = _repository.GetAll()
+                    .Where(w => w.Name.Contains(searchString)
+                             || w.Description.Contains(searchString))
+                    .Distinct();
+            }
+            else
+            {
+                WorkoutPrograms = _repository.GetAll();
+            }
+
+            switch (sortOrder)
+            {
+                
+
+                case "name_desc":
+                    Ordered = WorkoutPrograms.OrderByDescending(e => e.Name).ToList();
+                    //return View(Ordered);
+                    break;
+
+                case "muscleGroup":
+                    Ordered = WorkoutPrograms.OrderBy(e => e.Description).ToList();
+                    //return View(Ordered);
+                    break;
+
+                case "muscleGroup_desc":
+                    Ordered = WorkoutPrograms.OrderByDescending(e => e.Description).ToList();
+                    //return View(Ordered);
+                    break;
+
+                default:
+                    Ordered = WorkoutPrograms.OrderBy(e => e.Name).ToList();
+                    //return View(Ordered);
+                    break;
+            }
+
+            int pageSize = 30;
+
+            var paginatedList = await PaginatedList<WorkoutProgram>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
+
+            return View(paginatedList);
+
         }
 
         // GET: WorkoutPrograms/Details/5

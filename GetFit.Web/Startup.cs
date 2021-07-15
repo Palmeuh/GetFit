@@ -24,11 +24,11 @@ namespace GetFit.Web
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
-            
+
 
             services.AddDbContext<GetFitContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("GetFitContext"))
-                    .EnableSensitiveDataLogging());
+                    options.UseSqlServer(Configuration.GetConnectionString("GetFitContext")));
+                    
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<GetFitContext>();

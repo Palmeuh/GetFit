@@ -50,7 +50,7 @@ namespace GetFit.Web.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 Workouts = _repository.GetAll()
-                    .Where(w => w.Name.Contains(searchString)
+                    .Where(w => w.Name.Contains(searchString.ToLower())
                              || w.Description.Contains(searchString));                  
             }
             else

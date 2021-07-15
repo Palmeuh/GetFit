@@ -24,7 +24,7 @@ namespace GetFit.Web.Controllers
         // GET: Excercises
         public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
-            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "name";
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
 
             if (!string.IsNullOrEmpty(sortOrder))
@@ -58,11 +58,7 @@ namespace GetFit.Web.Controllers
             }
 
             switch (sortOrder)
-            {
-                case "name":
-                    Ordered = Excercises.OrderBy(e => e.Name).ToList();
-                    //return View(Ordered);
-                    break;
+            {               
 
                 case "name_desc":
                     Ordered = Excercises.OrderByDescending(e => e.Name).ToList();
