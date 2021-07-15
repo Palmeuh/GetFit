@@ -154,12 +154,12 @@ namespace GetFit.Web.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("WorkoutProgramId")
+                    b.Property<int?>("WorkoutPlanId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkoutProgramId");
+                    b.HasIndex("WorkoutPlanId");
 
                     b.ToTable("Workouts");
                 });
@@ -337,7 +337,7 @@ namespace GetFit.Web.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WorkoutWorkoutPlan", b =>
+            modelBuilder.Entity("WorkoutWorkoutProgram", b =>
                 {
                     b.Property<int>("WorkoutProgramsId")
                         .HasColumnType("int");
@@ -349,7 +349,7 @@ namespace GetFit.Web.Migrations
 
                     b.HasIndex("WorkoutsId");
 
-                    b.ToTable("WorkoutWorkoutPlan");
+                    b.ToTable("WorkoutWorkoutProgram");
                 });
 
             modelBuilder.Entity("ExcerciseWorkout", b =>
@@ -386,9 +386,9 @@ namespace GetFit.Web.Migrations
 
             modelBuilder.Entity("GetFit.Domain.Models.Workout", b =>
                 {
-                    b.HasOne("GetFit.Domain.Models.WorkoutProgram", null)
+                    b.HasOne("GetFit.Domain.Models.WorkoutPlan", null)
                         .WithMany("Workouts")
-                        .HasForeignKey("WorkoutProgramId");
+                        .HasForeignKey("WorkoutPlanId");
                 });
 
             modelBuilder.Entity("GetFit.Domain.Models.WorkoutPlan", b =>
@@ -451,9 +451,9 @@ namespace GetFit.Web.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WorkoutWorkoutPlan", b =>
+            modelBuilder.Entity("WorkoutWorkoutProgram", b =>
                 {
-                    b.HasOne("GetFit.Domain.Models.WorkoutPlan", null)
+                    b.HasOne("GetFit.Domain.Models.WorkoutProgram", null)
                         .WithMany()
                         .HasForeignKey("WorkoutProgramsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -471,11 +471,14 @@ namespace GetFit.Web.Migrations
                     b.Navigation("ApplicationUsers");
                 });
 
+            modelBuilder.Entity("GetFit.Domain.Models.WorkoutPlan", b =>
+                {
+                    b.Navigation("Workouts");
+                });
+
             modelBuilder.Entity("GetFit.Domain.Models.WorkoutProgram", b =>
                 {
                     b.Navigation("ApplicationUsers");
-
-                    b.Navigation("Workouts");
                 });
 #pragma warning restore 612, 618
         }
