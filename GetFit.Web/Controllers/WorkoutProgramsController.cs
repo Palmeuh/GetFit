@@ -25,6 +25,8 @@ namespace GetFit.Web.Controllers
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DescriptionSortParm"] = sortOrder == "description" ? "description_desc" : "muscleGroup";
+            ViewData["NumberOfWorkoutsSortParm"] = sortOrder == "workouts" ? "workouts_desc" : "workouts";
+
 
             if (!string.IsNullOrEmpty(sortOrder))
             {
@@ -47,7 +49,7 @@ namespace GetFit.Web.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 WorkoutPrograms = _repository.GetAll()
-                    .Where(w => w.Name.Contains(searchString)
+                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString))
                     .Distinct();
             }
@@ -75,13 +77,23 @@ namespace GetFit.Web.Controllers
                     //return View(Ordered);
                     break;
 
+                case "workouts":
+                    Ordered = WorkoutPrograms.OrderBy(e => e.Workouts.Count()).ToList();
+                    //return View(Ordered);
+                    break;
+
+                case "workouts_desc":
+                    Ordered = WorkoutPrograms.OrderByDescending(e => e.Workouts.Count()).ToList();
+                    //return View(Ordered);
+                    break;
+
                 default:
                     Ordered = WorkoutPrograms.OrderBy(e => e.Name).ToList();
                     //return View(Ordered);
                     break;
             }
 
-            int pageSize = 30;
+            int pageSize = 10;
 
             var paginatedList = await PaginatedList<WorkoutProgram>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
 

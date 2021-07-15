@@ -50,7 +50,7 @@ namespace GetFit.Web.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 Workouts = _repository.GetAll()
-                    .Where(w => w.Name.Contains(searchString.ToLower())
+                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString));                  
             }
             else
@@ -91,7 +91,7 @@ namespace GetFit.Web.Controllers
                     break;
             }
 
-            int pageSize = 5;
+            int pageSize = 15;
 
             var paginatedList = await PaginatedList<Workout>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
             

@@ -48,7 +48,7 @@ namespace GetFit.Web.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 Excercises = _repository.GetAll()
-                    .Where(w => w.Name.Contains(searchString)
+                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString))
                     .Distinct();
             }
