@@ -14,11 +14,11 @@ namespace GetFit.Infrastructure
     public static class GetFitSeedData
     {
         private static GetFitContext _context;
-        private const string ExcerciseFilePath = @"C:\Users\fredr\source\repos\GetFit\GetFit.Infrastructure\DataForSeed\excercises.txt";
-        private const int minWorkouts = 5;
-        private const int maxWorkouts = 8;
-        private const int minExcercises = 6;
-        private const int maxExcercises = 10;
+        private const string _excerciseFilePath = @"C:\Users\fredr\source\repos\GetFit\GetFit.Infrastructure\DataForSeed\excercises.txt";
+        private const int _minWorkouts = 5;
+        private const int _maxWorkouts = 8;
+        private const int _minExcercises = 6;
+        private const int _maxExcercises = 10;
 
         public static async Task CreateInitialDatabaseAsync(IApplicationBuilder app)
         {
@@ -28,20 +28,16 @@ namespace GetFit.Infrastructure
 
             if (!await _context.Excercise.AnyAsync())
             {
-                var excercises = ExcerciseFileReader.ReadFile(ExcerciseFilePath);
-
-
                 await GenerateExcercises();
                 await GenerateWorkouts();
                 await GenerateWorkoutPrograms();
             }
-
         }
 
 
         private async static Task GenerateExcercises()
         {
-            var excercises = await ExcerciseFileReader.ReadFile(ExcerciseFilePath);
+            var excercises = await ExcerciseFileReader.ReadFile(_excerciseFilePath);
 
             var excercisesToAddToDb = new List<Excercise>();
 
@@ -56,9 +52,6 @@ namespace GetFit.Infrastructure
                 excercisesToAddToDb.Add(excercise);
             }
 
-            var filtered = excercisesToAddToDb.Distinct();
-            var count = filtered.Count();
-
             await _context.Excercise.AddRangeAsync(excercisesToAddToDb);
             await _context.SaveChangesAsync();
         }
@@ -69,21 +62,21 @@ namespace GetFit.Infrastructure
             var excercises = await _context.Excercise.ToListAsync();
             var workoutsToAdd = new List<Workout>()
             {
-                new Workout { Name = "Chest v1", Description = "Some other dummy text in the meantime", Excercises = AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Chest v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Shoulders v1", Description = "Some other dummy text in the meantime", Excercises = AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Back v1", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Balanced", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Lower Body", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Upper Body", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Cardio", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Fat Burn", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Arms", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Legs v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Core", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Shoulders v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Back v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
-                new Workout { Name = "Legs v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  minExcercises, maxExcercises) },
+                new Workout { Name = "Chest v1", Description = "Some other dummy text in the meantime", Excercises = AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Chest v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Shoulders v1", Description = "Some other dummy text in the meantime", Excercises = AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Back v1", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Balanced", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Lower Body", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Upper Body", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Cardio", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Fat Burn", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Arms", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Legs v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Core", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Shoulders v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Back v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
+                new Workout { Name = "Legs v2", Description = "Some other dummy text in the meantime", Excercises =  AddToSeedHelper.AddToSeed(excercises,  _minExcercises, _maxExcercises) },
             };
 
             await _context.Workouts.AddRangeAsync(workoutsToAdd);
@@ -96,13 +89,13 @@ namespace GetFit.Infrastructure
 
             var workoutProgramsToAdd = new List<WorkoutProgram>()
             {
-                new WorkoutProgram {Name = "No Legs", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  minWorkouts, maxWorkouts)},
-                new WorkoutProgram {Name = "Beach Boys", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  minWorkouts, maxWorkouts)},
-                new WorkoutProgram {Name = "Disco Machine", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  minWorkouts, maxWorkouts)},
-                new WorkoutProgram {Name = "Summer 2022", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  minWorkouts, maxWorkouts)},
-                new WorkoutProgram {Name = "Super Size Me", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  minWorkouts, maxWorkouts)},
-                new WorkoutProgram {Name = "Lean Machine", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  minWorkouts, maxWorkouts)},
-                new WorkoutProgram {Name = "Chillout", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  minWorkouts, maxWorkouts)},
+                new WorkoutProgram {Name = "No Legs", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  _minWorkouts, _maxWorkouts)},
+                new WorkoutProgram {Name = "Beach Boys", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  _minWorkouts, _maxWorkouts)},
+                new WorkoutProgram {Name = "Disco Machine", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  _minWorkouts, _maxWorkouts)},
+                new WorkoutProgram {Name = "Summer 2022", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  _minWorkouts, _maxWorkouts)},
+                new WorkoutProgram {Name = "Super Size Me", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  _minWorkouts, _maxWorkouts)},
+                new WorkoutProgram {Name = "Lean Machine", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  _minWorkouts, _maxWorkouts)},
+                new WorkoutProgram {Name = "Chillout", Description = "Some other dummy text in the meantime", Workouts = AddToSeedHelper.AddToSeed(workouts,  _minWorkouts, _maxWorkouts)},
             };
 
             await _context.WorkoutPrograms.AddRangeAsync(workoutProgramsToAdd);

@@ -2,7 +2,9 @@
 
 namespace GetFit.Web.Migrations
 {
+#pragma warning disable IDE1006 // Naming Styles
     public partial class workoutprogramsbug : Migration
+#pragma warning restore IDE1006 // Naming Styles
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

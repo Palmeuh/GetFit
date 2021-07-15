@@ -58,39 +58,15 @@ namespace GetFit.Web.Controllers
                 Workouts = _repository.GetAll();
             }
 
-            switch (sortOrder)
-            {               
-                case "name_desc":
-                    Ordered = Workouts.OrderByDescending(e => e.Name).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "description":
-                    Ordered = Workouts.OrderBy(e => e.Description).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "description_desc":
-                    Ordered = Workouts.OrderByDescending(e => e.Description).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "excercises":
-                    Ordered = Workouts.OrderBy(e => e.Excercises.Count()).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "excercises_desc":
-                    Ordered = Workouts.OrderByDescending(e => e.Excercises.Count()).ToList();
-                    //return View(Ordered);
-                    break;
-
-                default:
-                    Ordered = Workouts.OrderBy(e => e.Name).ToList();
-                    //return View(Ordered);
-                    break;
-            }
-
+            Ordered = sortOrder switch
+            {
+                "name_desc" => Workouts.OrderByDescending(e => e.Name).ToList(),
+                "description" => Workouts.OrderBy(e => e.Description).ToList(),
+                "description_desc" => Workouts.OrderByDescending(e => e.Description).ToList(),
+                "excercises" => Workouts.OrderBy(e => e.Excercises.Count).ToList(),
+                "excercises_desc" => Workouts.OrderByDescending(e => e.Excercises.Count).ToList(),
+                _ => Workouts.OrderBy(e => e.Name).ToList(),
+            };
             int pageSize = 15;
 
             var paginatedList = await PaginatedList<Workout>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);

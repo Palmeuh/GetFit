@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using GetFit.Infrastructure;
 using GetFit.Domain.Models;
 using GetFit.Infrastructure.Repositories;
+using static GetFit.Infrastructure.Repositories.UnitOfWork;
 
 namespace GetFit.Web
 {
@@ -36,6 +37,7 @@ namespace GetFit.Web
             services.AddScoped<IRepository<Excercise>, ExcerciseRepository>();
             services.AddScoped<IRepository<Workout>, WorkoutRepository>();
             services.AddScoped<IRepository<WorkoutProgram>, WorkoutProgramRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 
@@ -47,7 +49,7 @@ namespace GetFit.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                 GetFitSeedData.CreateInitialDatabaseAsync(app).Wait();
+                GetFitSeedData.CreateInitialDatabaseAsync(app).Wait(); //need to move this as it can create a deadlock
             }
             else
             {

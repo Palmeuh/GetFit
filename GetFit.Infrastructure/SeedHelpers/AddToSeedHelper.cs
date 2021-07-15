@@ -8,7 +8,7 @@ namespace GetFit.Infrastructure.SeedHelpers
 {
     public static class AddToSeedHelper
     {
-        private static Random random = new Random();
+        private static readonly Random _random = new();
 
         public static List<T> AddToSeed<T>(List<T> list,
             int minToAdd, int maxToAdd)
@@ -16,13 +16,13 @@ namespace GetFit.Infrastructure.SeedHelpers
             var listToReturn = new List<T>();
 
             var minToChooseFrom = 0;
-            var maxToChooseFrom = list.Count();
+            var maxToChooseFrom = list.Count;
 
-            var numberOfExcercisesToAdd = random.Next(minToAdd, maxToAdd);
+            var numberOfExcercisesToAdd = _random.Next(minToAdd, maxToAdd);
 
             for (int i = 0; i < numberOfExcercisesToAdd; i++)
             {
-                listToReturn.Add(list[random.Next(minToChooseFrom, maxToChooseFrom)]);
+                listToReturn.Add(list[_random.Next(minToChooseFrom, maxToChooseFrom)]);
             }
             return listToReturn;
         }

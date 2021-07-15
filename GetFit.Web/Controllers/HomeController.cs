@@ -10,12 +10,10 @@ namespace GetFit.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly GetFitContext _context;
 
-        public HomeController(ILogger<HomeController> logger, GetFitContext context)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _context = context;
         }
 
         public async Task<IActionResult> IndexAsync()

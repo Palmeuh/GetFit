@@ -57,30 +57,13 @@ namespace GetFit.Web.Controllers
                 Excercises = _repository.GetAll();
             }
 
-            switch (sortOrder)
-            {               
-
-                case "name_desc":
-                    Ordered = Excercises.OrderByDescending(e => e.Name).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "muscleGroup":
-                    Ordered = Excercises.OrderBy(e => e.MuscleGroup).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "muscleGroup_desc":
-                    Ordered = Excercises.OrderByDescending(e => e.MuscleGroup).ToList();
-                    //return View(Ordered);
-                    break;
-
-                default:
-                    Ordered = Excercises.OrderBy(e => e.Name).ToList();
-                    //return View(Ordered);
-                    break;
-            }
-
+            Ordered = sortOrder switch
+            {
+                "name_desc" => Excercises.OrderByDescending(e => e.Name).ToList(),
+                "muscleGroup" => Excercises.OrderBy(e => e.MuscleGroup).ToList(),
+                "muscleGroup_desc" => Excercises.OrderByDescending(e => e.MuscleGroup).ToList(),
+                _ => Excercises.OrderBy(e => e.Name).ToList(),
+            };
             int pageSize = 30;
 
             var paginatedList = await PaginatedList<Excercise>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);

@@ -11,7 +11,7 @@ namespace GetFit.Web.Controllers
 {
     public class WorkoutProgramsController : Controller
     {
-        IRepository<WorkoutProgram> _repository;
+        private readonly IRepository<WorkoutProgram> _repository;
         public List<WorkoutProgram> Ordered { get; set; }
         public IEnumerable<WorkoutProgram> WorkoutPrograms { get; set; }
 
@@ -58,41 +58,15 @@ namespace GetFit.Web.Controllers
                 WorkoutPrograms = _repository.GetAll();
             }
 
-            switch (sortOrder)
+            Ordered = sortOrder switch
             {
-                
-
-                case "name_desc":
-                    Ordered = WorkoutPrograms.OrderByDescending(e => e.Name).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "muscleGroup":
-                    Ordered = WorkoutPrograms.OrderBy(e => e.Description).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "muscleGroup_desc":
-                    Ordered = WorkoutPrograms.OrderByDescending(e => e.Description).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "workouts":
-                    Ordered = WorkoutPrograms.OrderBy(e => e.Workouts.Count).ToList();
-                    //return View(Ordered);
-                    break;
-
-                case "workouts_desc":
-                    Ordered = WorkoutPrograms.OrderByDescending(e => e.Workouts.Count).ToList();
-                    //return View(Ordered);
-                    break;
-
-                default:
-                    Ordered = WorkoutPrograms.OrderBy(e => e.Name).ToList();
-                    //return View(Ordered);
-                    break;
-            }
-
+                "name_desc" => WorkoutPrograms.OrderByDescending(e => e.Name).ToList(),
+                "muscleGroup" => WorkoutPrograms.OrderBy(e => e.Description).ToList(),
+                "muscleGroup_desc" => WorkoutPrograms.OrderByDescending(e => e.Description).ToList(),
+                "workouts" => WorkoutPrograms.OrderBy(e => e.Workouts.Count).ToList(),
+                "workouts_desc" => WorkoutPrograms.OrderByDescending(e => e.Workouts.Count).ToList(),
+                _ => WorkoutPrograms.OrderBy(e => e.Name).ToList(),
+            };
             int pageSize = 10;
 
             var paginatedList = await PaginatedList<WorkoutProgram>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
