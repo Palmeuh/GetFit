@@ -10,6 +10,7 @@ namespace GetFit.Infrastructure.Repositories
 
         }
 
+
         public override Excercise Edit(Excercise entity)
         {
 

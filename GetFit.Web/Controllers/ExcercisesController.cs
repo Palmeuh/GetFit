@@ -6,6 +6,7 @@ using GetFit.Infrastructure;
 using GetFit.Infrastructure.Repositories;
 using System.Collections.Generic;
 using GetFit.Infrastructure.SearchSortFilter;
+using GetFit.Web.ViewModels;
 
 namespace GetFit.Web.Controllers
 {
@@ -93,6 +94,7 @@ namespace GetFit.Web.Controllers
         // GET: Excercises/Create
         public IActionResult Create()
         {
+            
             return View();
         }
 
@@ -101,7 +103,7 @@ namespace GetFit.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,MuscleGroup,Description")] Excercise excercise)
+        public async Task<IActionResult> Create([Bind("Id,Name,MuscleGroup,Description, Category")] Excercise excercise)
         {
             if (ModelState.IsValid)
             {
