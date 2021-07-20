@@ -13,6 +13,8 @@ namespace GetFit.Web.Controllers
     {
         private readonly IRepository<WorkoutProgram> _repository;
         public List<WorkoutProgram> Ordered { get; set; }
+        public IQueryable<WorkoutProgram> Ordered2 { get; set; }
+
         public IEnumerable<WorkoutProgram> WorkoutPrograms { get; set; }
 
         public WorkoutProgramsController(IRepository<WorkoutProgram> repository)
@@ -26,6 +28,7 @@ namespace GetFit.Web.Controllers
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DescriptionSortParm"] = sortOrder == "description" ? "description_desc" : "muscleGroup";
             ViewData["NumberOfWorkoutsSortParm"] = sortOrder == "workouts" ? "workouts_desc" : "workouts";
+            ViewData["CurrentSort"] = sortOrder;
 
 
             if (!string.IsNullOrEmpty(sortOrder))
@@ -69,7 +72,7 @@ namespace GetFit.Web.Controllers
             };
             int pageSize = 10;
 
-            var paginatedList = await PaginatedList<WorkoutProgram>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
+            var paginatedList = await PaginatedList<WorkoutProgram>.CreateAsync(Ordered2, pageNumber ?? 1, pageSize);
 
             return View(paginatedList);
 

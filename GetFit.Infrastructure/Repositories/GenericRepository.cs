@@ -20,6 +20,11 @@ namespace GetFit.Infrastructure.Repositories
             return _context.Add(entity).Entity;
         }
 
+        public virtual IQueryable<T> GetAllAsQuery()
+        {
+            return _context.Set<T>();
+        }
+
         public virtual IEnumerable<T> GetAll()
         {
             return _context.Set<T>()                

@@ -14,6 +14,7 @@ namespace GetFit.Web.Controllers
         private readonly IRepository<Workout> _repository;
 
         public List<Workout> Ordered { get; set; }
+        public IQueryable<Workout> Ordered2 { get; set; }
         public IEnumerable<Workout> Workouts { get; set; }
 
         public WorkoutsController(IRepository<Workout> repository)
@@ -69,7 +70,7 @@ namespace GetFit.Web.Controllers
             };
             int pageSize = 15;
 
-            var paginatedList = await PaginatedList<Workout>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
+            var paginatedList = await PaginatedList<Workout>.CreateAsync(Ordered2, pageNumber ?? 1, pageSize);
             
             return View(paginatedList);
 

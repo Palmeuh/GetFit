@@ -7,6 +7,7 @@ using GetFit.Infrastructure.Repositories;
 using System.Collections.Generic;
 using GetFit.Infrastructure.SearchSortFilter;
 using GetFit.Web.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace GetFit.Web.Controllers
 {
@@ -25,18 +26,19 @@ namespace GetFit.Web.Controllers
         // GET: Excercises
         public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
-            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "name";
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
-            
+            ViewData["CurrentSort"] = sortOrder;
 
-            if (!string.IsNullOrEmpty(sortOrder))
-            {
-                ViewData["CurrentFilter"] = currentFilter;
-            }
-            else
-            {
-                ViewData["CurrentFilter"] = searchString;
-            }
+
+            //if (!string.IsNullOrEmpty(sortOrder))
+            //{
+            //    ViewData["CurrentFilter"] = currentFilter;
+            //}
+            //else
+            //{
+            //    ViewData["CurrentFilter"] = searchString;
+            //}
 
             if (searchString != null)
             {
@@ -47,31 +49,29 @@ namespace GetFit.Web.Controllers
                 searchString = currentFilter;
             }
 
+            ViewData["CurrentFilter"] = searchString;
+
+            var excercises = _repository.GetAllAsQuery();
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                Excercises = _repository.GetAll()
+                excercises = excercises
                     .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString))
                     .Distinct();
             }
-            else
-            {
-                Excercises = _repository.GetAll();
-            }
+           
 
             Ordered = sortOrder switch
             {
-                "name" => Excercises.OrderBy(e => e.Name).ToList(),
-                "name_desc" => Excercises.OrderByDescending(e => e.Name).ToList(),
-                "muscleGroup" => Excercises.OrderBy(e => e.MuscleGroup).ToList(),
-                "muscleGroup_desc" => Excercises.OrderByDescending(e => e.MuscleGroup).ToList(),
-                _ => Excercises.OrderBy(e => e.Name).ToList(),
+                "name_desc" => excercises.OrderByDescending(e => e.Name).ToList(),
+                "muscleGroup" => excercises.OrderBy(e => e.MuscleGroup).ToList(),
+                "muscleGroup_desc" => excercises.OrderByDescending(e => e.MuscleGroup).ToList(),
+                _ => excercises.OrderBy(e => e.Name).ToList(),
             };
             int pageSize = 30;
 
-            var paginatedList = await PaginatedList<Excercise>.CreateAsync(Ordered, pageNumber ?? 1, pageSize);
-
-            return View(paginatedList);
+            return View(await PaginatedList<Excercise>.CreateAsync(excercises.AsNoTracking(), pageNumber ?? 1, pageSize));           
           
         }
 
