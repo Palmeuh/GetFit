@@ -47,7 +47,8 @@ namespace GetFit.Infrastructure
                 {
                     Name = excercises[i, 0],
                     Description = "Some description for the excercise",
-                    MuscleGroup = excercises[i, 1]
+                    MuscleGroup = excercises[i, 1],
+                    Category = AddToSeedHelper.SelectCategory(excercises[i,1])
                 };
                 excercisesToAddToDb.Add(excercise);
             }

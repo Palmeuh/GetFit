@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GetFit.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,66 @@ namespace GetFit.Infrastructure.SeedHelpers
                 listToReturn.Add(list[_random.Next(minToChooseFrom, maxToChooseFrom)]);
             }
             return listToReturn;
+        }
+
+        internal static Category SelectCategory(string v)
+        {
+            switch (v)
+            {
+                case "abdominals":
+                    return Category.Core;
+
+                case "adductors":
+                    return Category.Legs;
+
+                case "biceps":
+                    return Category.Biceps;
+
+                case "quadriceps":
+                    return Category.Legs;
+
+                case "shoulders":
+                    return Category.Shoulders;
+
+                case "chest":
+                    return Category.Chest;
+
+                case "lower back":
+                    return Category.Back;
+
+                case "middle back":
+                    return Category.Back;
+
+                case "triceps":
+                    return Category.Triceps;
+
+                case "hamstrings":
+                    return Category.Legs;
+
+                case "lats":
+                    return Category.Back;
+
+                case "traps":
+                    return Category.Back;
+
+                case "calves":
+                    return Category.Legs;
+
+                case "forearms":
+                    return Category.Biceps;
+
+                case "neck":
+                    return Category.Back;
+
+                case "glutes":
+                    return Category.Legs;
+
+
+
+                default:
+                    return Category.None;
+
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ namespace GetFit.Domain.Models
         Core = 4,
         Legs = 5,
         Triceps = 6,
-        Shoulders = 7
+        Shoulders = 7,
+        None = 8
     }
 }
