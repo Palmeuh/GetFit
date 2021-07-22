@@ -62,11 +62,11 @@ namespace GetFit.Web.Controllers
                     break;
 
                 case "muscleGroup":
-                    newList = excercises.OrderBy(e => e.MuscleGroup);
+                    newList = excercises.OrderBy(e => e.Category);
                     break;
 
                 case "muscleGroup_desc":
-                    newList = excercises.OrderByDescending(e => e.MuscleGroup);
+                    newList = excercises.OrderByDescending(e => e.Category);
                     break;
 
                 default:

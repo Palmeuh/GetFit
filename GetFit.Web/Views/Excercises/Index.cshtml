@@ -18,49 +18,45 @@
             </p>
         </div>
     </form>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
-                </th>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["MuscleGroupSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Muscle Group</a>
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Muscle Group
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="tableContainer">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MuscleGroup)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelitem => item.Category)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                    
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["MuscleGroupSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Category</a>
+                    </th>
+                    <th>
+                        Description
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="tableRow">
+                        <td class="excerciseName">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="excerciseCategory">
+                            @Html.DisplayFor(modelitem => item.Category)
+                        </td>
+                        <td class="excerciseDescription">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td class="tableActions">
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
     @{
         var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
