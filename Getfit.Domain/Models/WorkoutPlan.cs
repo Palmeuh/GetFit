@@ -6,7 +6,7 @@ namespace GetFit.Domain.Models
     {
         public int Id { get; set; }
         public int ApplicationUserId { get; set; }
-        public WorkoutPlan WorkoutProgram { get; set; }
+        public WorkoutProgram WorkoutProgram { get; set; }
         public List<Workout> Workouts { get; set; }
     }
 }

@@ -14,13 +14,15 @@ namespace GetFit.Web.Controllers
     public class ExcercisesController : Controller
     {
         private readonly IRepository<Excercise> _repository;
+        private readonly GetFitContext _getFitContext;
 
         public List<Excercise> Ordered { get; set; }
         public IEnumerable<Excercise> Excercises { get; set; }
 
-        public ExcercisesController(IRepository<Excercise> repository)
+        public ExcercisesController(IRepository<Excercise> repository, GetFitContext getFitContext)
         {
             _repository = repository;
+            _getFitContext = getFitContext;
         }
 
         // GET: Excercises
@@ -29,16 +31,6 @@ namespace GetFit.Web.Controllers
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
             ViewData["CurrentSort"] = sortOrder;
-
-
-            //if (!string.IsNullOrEmpty(sortOrder))
-            //{
-            //    ViewData["CurrentFilter"] = currentFilter;
-            //}
-            //else
-            //{
-            //    ViewData["CurrentFilter"] = searchString;
-            //}
 
             if (searchString != null)
             {
@@ -51,7 +43,8 @@ namespace GetFit.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var excercises = _repository.GetAllAsQuery();
+            IQueryable<Excercise> excercises = (IOrderedQueryable<Excercise>)_repository.GetAll();
+            var excercises2 = from e in _getFitContext.Excercise select e;          
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -60,19 +53,31 @@ namespace GetFit.Web.Controllers
                              || w.Description.Contains(searchString))
                     .Distinct();
             }
-           
 
-            Ordered = sortOrder switch
+            IOrderedQueryable<Excercise> newList;
+
+            switch (sortOrder)
             {
-                "name_desc" => excercises.OrderByDescending(e => e.Name).ToList(),
-                "muscleGroup" => excercises.OrderBy(e => e.MuscleGroup).ToList(),
-                "muscleGroup_desc" => excercises.OrderByDescending(e => e.MuscleGroup).ToList(),
-                _ => excercises.OrderBy(e => e.Name).ToList(),
-            };
+                case "name_desc":
+                    newList = excercises.OrderByDescending(e => e.Name);
+                    break;
+
+                case "muscleGroup":
+                    newList = excercises.OrderBy(e => e.MuscleGroup);
+                    break;
+
+                case "muscleGroup_desc":
+                    newList = excercises.OrderByDescending(e => e.MuscleGroup);
+                    break;
+
+                default:
+                    newList = excercises.OrderBy(e => e.Name);
+                    break;                    
+            }
+           
             int pageSize = 30;
 
-            return View(await PaginatedList<Excercise>.CreateAsync(excercises.AsNoTracking(), pageNumber ?? 1, pageSize));           
-          
+             return View(await PaginatedList<Excercise>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Excercises/Details/5
