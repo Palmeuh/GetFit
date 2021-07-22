@@ -18,7 +18,7 @@ namespace GetFit.Infrastructure.Repositories
                 .FirstOrDefault(e => e.Id == entity.Id);
 
             excercise.Name = entity.Name;
-            excercise.MuscleGroup = entity.MuscleGroup;
+            excercise.Category = entity.Category;
             excercise.Description = entity.Description;
 
             return base.Edit(excercise);

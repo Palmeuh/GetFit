@@ -90,8 +90,11 @@ footer {
 
 .table {
     table-layout: fixed;
-    word-wrap: break-word; 
-  
+    word-wrap: break-word;   
+}
+
+.excerciseName {
+    text-transform: capitalize;
 }
 
 

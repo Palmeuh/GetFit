@@ -17,5 +17,15 @@ namespace GetFit.Infrastructure
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<WorkoutProgram> WorkoutPrograms { get; set; }
         public DbSet<WorkoutPlan> WorkoutPlans { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Excercise>()
+                .HasIndex(w => w.Name)
+                .IsUnique();
+        }
     }
 }
