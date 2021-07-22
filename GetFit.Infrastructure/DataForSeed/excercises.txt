@@ -112,7 +112,7 @@ bent-arm barbell pullover,lats
 bent-arm dumbbell pullover,chest
 bent-knee hip raise,abdominals
 bicycling,quadriceps
-bicycling,stationary,quadriceps
+bicycling2,stationary,quadriceps
 board press,triceps
 body tricep press,triceps
 body-up,triceps

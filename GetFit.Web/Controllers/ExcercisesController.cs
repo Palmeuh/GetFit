@@ -51,8 +51,7 @@ namespace GetFit.Web.Controllers
                     .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString))
                     .Distinct();
-            }
-
+            }  
             IOrderedQueryable<Excercise> newList;
 
             switch (sortOrder)
@@ -71,12 +70,21 @@ namespace GetFit.Web.Controllers
 
                 default:
                     newList = excercises.OrderBy(e => e.Name);
-                    break;                    
+                    break;
             }
-           
-            int pageSize = 30;
 
-             return View(await PaginatedList<Excercise>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
+            int pageSize = 30;
+            try
+            
+            {
+                return View(await PaginatedList<Excercise>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
+
+            }
+            catch (System.Exception e)
+            {
+                return View(nameof(Index));               
+            }
+
         }
 
         // GET: Excercises/Details/5
@@ -100,7 +108,7 @@ namespace GetFit.Web.Controllers
         // GET: Excercises/Create
         public IActionResult Create()
         {
-            
+
             return View();
         }
 
