@@ -43,8 +43,7 @@ namespace GetFit.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            IQueryable<Excercise> excercises = (IOrderedQueryable<Excercise>)_repository.GetAll();
-            var excercises2 = from e in _getFitContext.Excercise select e;          
+            var excercises = _repository.GetAllAsQuery();
 
             if (!string.IsNullOrEmpty(searchString))
             {
