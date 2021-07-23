@@ -1,6 +1,7 @@
 ﻿using GetFit.Domain.Models;
 using GetFit.Infrastructure.Repositories;
 using GetFit.Infrastructure.SearchSortFilter;
+using GetFit.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -12,12 +13,15 @@ namespace GetFit.Web.Controllers
     public class WorkoutsController : Controller
     {
         private readonly IRepository<Workout> _repository;
+        private readonly IRepository<Excercise> _repositoryExcercise;
 
         public IEnumerable<Workout> Workouts { get; set; }
+        public IEnumerable<Excercise> Excercises { get; set; }
 
-        public WorkoutsController(IRepository<Workout> repository)
+        public WorkoutsController(IRepository<Workout> repository, IRepository<Excercise> repositoryExcercise)
         {
             _repository = repository;
+            _repositoryExcercise = repositoryExcercise;
         }
 
         // GET: Workouts
@@ -106,10 +110,85 @@ namespace GetFit.Web.Controllers
             {
                 await _repository.Add(workout);
                 await _repository.SaveChanges();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("AddExcercisesToWorkout", workout);
             }
             return View(workout);
+        }        
+       
+        public async Task<IActionResult> AddExcercisesToWorkoutAsync(Workout workout, string sortOrder, string searchString, string currentFilter, int? pageNumber, int? objectId)
+        {
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
+            ViewData["CurrentSort"] = sortOrder;
+
+            var currentWorkout = await _repository.GetById(workout.Id);
+
+            if (objectId == null)
+            {
+                ViewData["ObjectId"] = workout.Id;
+            }
+            else
+            {
+                ViewData["ObjectId"] = objectId;
+            }            
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                Excercises = await _repositoryExcercise.Find(
+                    w => w.Name.Contains(searchString) ||
+                    w.Description.Contains(searchString));
+            }
+            else
+            {
+                Excercises = await _repositoryExcercise.GetAll();
+            }
+
+            IEnumerable<Excercise> newList = sortOrder switch
+            {
+                "name_desc" => Excercises.OrderByDescending(e => e.Name),
+                "muscleGroup" => Excercises.OrderBy(e => e.Description),
+                "muscleGroup_desc" => Excercises.OrderByDescending(e => e.Description),
+                _ => Excercises.OrderBy(e => e.Name),
+            };
+            int pageSize = 30;         
+
+
+            var paginatedList =  PaginatedList<Excercise>.Create(newList, pageNumber ?? 1, pageSize);
+
+
+            return View(new AddExcerciseToWorkoutViewModel() {PaginatedList = paginatedList, Workout = currentWorkout });
         }
+
+                
+        public async Task<IActionResult> AddExcercise(int? workoutId, int? excerciseId)
+        {
+            var workout = await _repository.GetById(workoutId);
+            var excercise = await _repositoryExcercise.GetById(excerciseId);
+
+            workout.Excercises.Add(excercise);
+
+            await _repository.SaveChanges();
+            await _repositoryExcercise.SaveChanges();
+
+            return RedirectToAction("AddExcercisesToWorkout", workout);
+
+
+        }
+
+
 
         // GET: Workouts/Edit/5
         public async Task<IActionResult> Edit(int? id)

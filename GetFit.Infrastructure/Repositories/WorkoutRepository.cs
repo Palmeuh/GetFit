@@ -35,6 +35,16 @@ namespace GetFit.Infrastructure.Repositories
             return base.Edit(workout);
         }
 
+        public override async Task<Workout> GetById(int? id)
+        {
+            var workout = await _context.Workouts
+                .Where(w => w.Id == id)
+                .Include(e => e.Excercises)
+                .FirstOrDefaultAsync();
+
+            return workout;
+        }
+
         public override IQueryable<Workout> GetAllAsQuery()
         {
             return _context.Set<Workout>()
