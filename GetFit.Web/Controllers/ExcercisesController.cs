@@ -43,7 +43,7 @@ namespace GetFit.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var excercises = _repository.GetAllAsQuery();
+            var excercises =  _repository.GetAllAsQuery();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -51,31 +51,17 @@ namespace GetFit.Web.Controllers
                     .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString))
                     .Distinct();
-            }  
-            IOrderedQueryable<Excercise> newList;
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    newList = excercises.OrderByDescending(e => e.Name);
-                    break;
-
-                case "muscleGroup":
-                    newList = excercises.OrderBy(e => e.Category);
-                    break;
-
-                case "muscleGroup_desc":
-                    newList = excercises.OrderByDescending(e => e.Category);
-                    break;
-
-                default:
-                    newList = excercises.OrderBy(e => e.Name);
-                    break;
             }
 
+            IOrderedQueryable<Excercise> newList = sortOrder switch
+            {
+                "name_desc" => excercises.OrderByDescending(e => e.Name),
+                "muscleGroup" => excercises.OrderBy(e => e.Category),
+                "muscleGroup_desc" => excercises.OrderByDescending(e => e.Category),
+                _ => excercises.OrderBy(e => e.Name),
+            };
             int pageSize = 30;
-            try
-            
+            try            
             {
                 return View(await PaginatedList<Excercise>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
 
@@ -95,7 +81,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var excercise = _repository.GetById(id);
+            var excercise = await _repository.GetById(id);
 
             if (excercise == null)
             {
@@ -108,7 +94,6 @@ namespace GetFit.Web.Controllers
         // GET: Excercises/Create
         public IActionResult Create()
         {
-
             return View();
         }
 
@@ -121,9 +106,9 @@ namespace GetFit.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(excercise);
+                await _repository.Add(excercise);
 
-                _repository.SaveChanges();
+                await _repository.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -133,16 +118,12 @@ namespace GetFit.Web.Controllers
         // GET: Excercises/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-
-
-            return View(_repository.GetById(id));
-
             if (id == null)
             {
                 return NotFound();
             }
 
-            var excercise = _repository.GetById(id);
+            var excercise = await _repository.GetById(id);
             if (excercise == null)
             {
                 return NotFound();
@@ -156,39 +137,35 @@ namespace GetFit.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,MuscleGroup,Description")] Excercise excercise)
-        {
-            _repository.Edit(excercise);
-            _repository.SaveChanges();
-
-            return RedirectToAction("Index");
+        {          
 
 
-            //if (id != excercise.Id)
-            //{
-            //    return NotFound();
-            //}
+            if (id != excercise.Id)
+            {
+                return NotFound();
+            }
 
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //        _context.Update(excercise);
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!ExcerciseExists(excercise.Id))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(excercise);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _repository.Edit(excercise);
+                    await _repository.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await ExcerciseExistsAsync(excercise.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(excercise);
         }
 
         // GET: Excercises/Delete/5
@@ -199,7 +176,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var excercise = _repository.GetById(id);
+            var excercise = await _repository.GetById(id);
             if (excercise == null)
             {
                 return NotFound();
@@ -213,17 +190,19 @@ namespace GetFit.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var excercise = _repository.GetById(id);
+            var excercise = await _repository.GetById(id);
 
             _repository.Remove(excercise);
-            _repository.SaveChanges();
+            await _repository.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ExcerciseExists(int id)
+        private async Task<bool> ExcerciseExistsAsync(int id)
         {
-            return _repository.GetAll().Any(e => e.Id == id);
+            var excercises = await _repository.GetAll();            
+
+            return excercises.Any(e => e.Id == id);
         }
     }
 }

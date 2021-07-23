@@ -51,14 +51,15 @@ namespace GetFit.Web.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                WorkoutPrograms = _repository.GetAll()
-                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
+                var workoutPrograms = await _repository.GetAll();
+
+                WorkoutPrograms = workoutPrograms.Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString))
                     .Distinct();
             }
             else
             {
-                WorkoutPrograms = _repository.GetAll();
+                WorkoutPrograms = await _repository.GetAll();
             }
 
             Ordered = sortOrder switch
@@ -86,7 +87,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workoutProgram = _repository.GetById(id);
+            var workoutProgram = await _repository.GetById(id);
             if (workoutProgram == null)
             {
                 return NotFound();
@@ -110,9 +111,9 @@ namespace GetFit.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(workoutProgram);
-                _repository.SaveChanges();
-                return RedirectToAction(nameof(Index));
+               await _repository.Add(workoutProgram);
+               await _repository.SaveChanges();
+               return RedirectToAction(nameof(Index));
             }
             return View(workoutProgram);
         }
@@ -125,7 +126,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workoutProgram = _repository.GetById(id);
+            var workoutProgram = await _repository.GetById(id);
             if (workoutProgram == null)
             {
                 return NotFound();
@@ -150,11 +151,11 @@ namespace GetFit.Web.Controllers
                 try
                 {
                     _repository.Edit(workoutProgram);
-                    _repository.SaveChanges();
+                    await _repository.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WorkoutProgramExists(workoutProgram.Id))
+                    if (!await WorkoutProgramExistsAsync(workoutProgram.Id))
                     {
                         return NotFound();
                     }
@@ -176,7 +177,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workoutProgram = _repository.GetById(id);
+            var workoutProgram = await _repository.GetById(id);
             if (workoutProgram == null)
             {
                 return NotFound();
@@ -190,15 +191,17 @@ namespace GetFit.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var workoutProgram = _repository.GetById(id);
+            var workoutProgram = await _repository.GetById(id);
             _repository.Remove(workoutProgram);
-            _repository.SaveChanges();
+            await _repository.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WorkoutProgramExists(int id)
+        private async Task<bool> WorkoutProgramExistsAsync(int id)
         {
-            return _repository.GetAll().Any(e => e.Id == id);
+            var workoutProgram = await _repository.GetAll();
+
+            return workoutProgram.Any(e => e.Id == id);
         }
     }
 }
