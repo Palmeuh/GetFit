@@ -1,9 +1,4 @@
 ﻿using GetFit.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure.Repositories
 {
@@ -26,7 +21,7 @@ namespace GetFit.Infrastructure.Repositories
             _context = context;
         }
 
-       
+
 
         private IRepository<Excercise> _excerciseRepository;
         public IRepository<Excercise> ExcerciseRepository

@@ -1,17 +1,17 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using GetFit.Domain.Models;
+using GetFit.Infrastructure.Repositories;
+using GetFit.Infrastructure.SearchSortFilter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GetFit.Domain.Models;
-using GetFit.Infrastructure.Repositories;
 using System.Collections.Generic;
-using GetFit.Infrastructure.SearchSortFilter;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GetFit.Web.Controllers
 {
     public class WorkoutProgramsController : Controller
     {
-        private readonly IRepository<WorkoutProgram> _repository;      
+        private readonly IRepository<WorkoutProgram> _repository;
 
         public IEnumerable<WorkoutProgram> WorkoutPrograms { get; set; }
 
@@ -38,12 +38,10 @@ namespace GetFit.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            
-
             if (!string.IsNullOrEmpty(searchString))
             {
                 WorkoutPrograms = await _repository.Find
-                    (wp => wp.Name.Contains(searchString) 
+                    (wp => wp.Name.Contains(searchString)
                     || wp.Description.Contains(searchString));
             }
             else
@@ -61,8 +59,7 @@ namespace GetFit.Web.Controllers
             int pageSize = 30;
             try
             {
-                return View( PaginatedList<WorkoutProgram>.Create(newList, pageNumber ?? 1, pageSize));
-
+                return View(PaginatedList<WorkoutProgram>.Create(newList, pageNumber ?? 1, pageSize));
             }
             catch (System.Exception e)
             {
@@ -103,9 +100,9 @@ namespace GetFit.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-               await _repository.Add(workoutProgram);
-               await _repository.SaveChanges();
-               return RedirectToAction(nameof(Index));
+                await _repository.Add(workoutProgram);
+                await _repository.SaveChanges();
+                return RedirectToAction(nameof(Index));
             }
             return View(workoutProgram);
         }

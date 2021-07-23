@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using GetFit.Domain.Models;
+using GetFit.Infrastructure;
+using GetFit.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using GetFit.Infrastructure;
-using GetFit.Domain.Models;
-using GetFit.Infrastructure.Repositories;
-using static GetFit.Infrastructure.Repositories.UnitOfWork;
 
 namespace GetFit.Web
 {
@@ -25,14 +24,14 @@ namespace GetFit.Web
         {
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
-            
+
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
 
 
             services.AddDbContext<GetFitContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("GetFitContext")));
-                    
+
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<GetFitContext>();
@@ -76,10 +75,10 @@ namespace GetFit.Web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            
-            
+
+
         }
 
-        
+
     }
 }

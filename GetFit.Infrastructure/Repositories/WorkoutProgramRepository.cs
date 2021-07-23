@@ -31,7 +31,7 @@ namespace GetFit.Infrastructure.Repositories
 
             workoutProgram.Name = entity.Name;
             workoutProgram.Description = entity.Description;
-            
+
 
             return base.Edit(workoutProgram);
 

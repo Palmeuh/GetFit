@@ -4,9 +4,7 @@ using GetFit.Infrastructure.SeedHelpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure
@@ -47,7 +45,7 @@ namespace GetFit.Infrastructure
                 {
                     Name = excercises[i, 0],
                     Description = "Some description for the excercise",
-                    Category = AddToSeedHelper.SelectCategory(excercises[i,1])
+                    Category = AddToSeedHelper.SelectCategory(excercises[i, 1])
                 };
                 excercisesToAddToDb.Add(excercise);
             }

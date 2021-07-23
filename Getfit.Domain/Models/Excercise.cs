@@ -8,7 +8,7 @@ namespace GetFit.Domain.Models
         public int Id { get; set; }
         [StringLength(70, MinimumLength = 2)]
         [Required]
-        public string Name { get; set; }        
+        public string Name { get; set; }
         public Category Category { get; set; }
         [StringLength(130, MinimumLength = 5)]
         [Required]

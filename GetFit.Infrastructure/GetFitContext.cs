@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using GetFit.Domain.Models;
+﻿using GetFit.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace GetFit.Infrastructure
 {

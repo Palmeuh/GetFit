@@ -1,13 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using GetFit.Domain.Models;
+﻿using GetFit.Domain.Models;
 using GetFit.Infrastructure;
 using GetFit.Infrastructure.Repositories;
-using System.Collections.Generic;
 using GetFit.Infrastructure.SearchSortFilter;
-using GetFit.Web.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GetFit.Web.Controllers
 {
@@ -32,7 +31,7 @@ namespace GetFit.Web.Controllers
             ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
             ViewData["CurrentSort"] = sortOrder;
 
-            
+
 
             if (searchString != null)
             {
@@ -46,11 +45,11 @@ namespace GetFit.Web.Controllers
             ViewData["CurrentFilter"] = searchString;
 
 
-            
+
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                Excercises = await _repository.Find(w => w.Name.Contains(searchString) || w.Description.Contains(searchString)); 
+                Excercises = await _repository.Find(w => w.Name.Contains(searchString) || w.Description.Contains(searchString));
             }
             else
             {
@@ -65,14 +64,14 @@ namespace GetFit.Web.Controllers
                 _ => Excercises.OrderBy(e => e.Name),
             };
             int pageSize = 30;
-            try            
+            try
             {
                 return View(PaginatedList<Excercise>.Create(newList, pageNumber ?? 1, pageSize));
 
             }
             catch (System.Exception e)
             {
-                return View(nameof(Index));               
+                return View(nameof(Index));
             }
 
         }
@@ -141,7 +140,7 @@ namespace GetFit.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,MuscleGroup,Description")] Excercise excercise)
-        {          
+        {
 
 
             if (id != excercise.Id)
@@ -204,7 +203,7 @@ namespace GetFit.Web.Controllers
 
         private async Task<bool> ExcerciseExistsAsync(int id)
         {
-            var excercises = await _repository.GetAll();            
+            var excercises = await _repository.GetAll();
 
             return excercises.Any(e => e.Id == id);
         }

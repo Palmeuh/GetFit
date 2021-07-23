@@ -9,7 +9,7 @@ namespace GetFit.Infrastructure.DataReader
     {
         public async static Task<string[,]> ReadFile(string fileUrl)
         {
-            var text = await File.ReadAllLinesAsync(fileUrl);            
+            var text = await File.ReadAllLinesAsync(fileUrl);
             var filteredList = new List<string>();
 
             foreach (var line in text)

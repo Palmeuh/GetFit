@@ -1,5 +1,4 @@
-﻿using GetFit.Infrastructure;
-using GetFit.Web.Models;
+﻿using GetFit.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -17,7 +16,7 @@ namespace GetFit.Web.Controllers
         }
 
         public async Task<IActionResult> IndexAsync()
-        {           
+        {
             return View();
         }
 

@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using GetFit.Domain.Models;
+using GetFit.Infrastructure.Repositories;
+using GetFit.Infrastructure.SearchSortFilter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GetFit.Domain.Models;
-using GetFit.Infrastructure.Repositories;
 using System.Collections.Generic;
-using GetFit.Infrastructure.SearchSortFilter;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GetFit.Web.Controllers
 {

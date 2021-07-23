@@ -17,7 +17,7 @@ namespace GetFit.Infrastructure.Repositories
         }
 
         public virtual async Task Add(T entity)
-        { 
+        {
             // await Context.AddAsync(entity);
             await _context.AddAsync(entity);
             await _context.SaveChangesAsync();
@@ -25,12 +25,12 @@ namespace GetFit.Infrastructure.Repositories
 
         public virtual IQueryable<T> GetAllAsQuery()
         {
-            return  _context.Set<T>().AsQueryable();
+            return _context.Set<T>().AsQueryable();
         }
 
         public virtual async Task<IEnumerable<T>> GetAll()
         {
-            return await _context.Set<T>()                
+            return await _context.Set<T>()
                 .ToListAsync();
         }
 
@@ -60,8 +60,8 @@ namespace GetFit.Infrastructure.Repositories
 
         public virtual T Edit(T entity)
         {
-            return  _context.Update(entity).Entity;
-            
+            return _context.Update(entity).Entity;
+
         }
     }
 }
