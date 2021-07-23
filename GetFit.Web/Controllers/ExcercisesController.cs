@@ -31,8 +31,6 @@ namespace GetFit.Web.Controllers
             ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
             ViewData["CurrentSort"] = sortOrder;
 
-
-
             if (searchString != null)
             {
                 pageNumber = 1;
@@ -43,9 +41,6 @@ namespace GetFit.Web.Controllers
             }
 
             ViewData["CurrentFilter"] = searchString;
-
-
-
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -105,7 +100,7 @@ namespace GetFit.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,MuscleGroup,Description, Category")] Excercise excercise)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Category")] Excercise excercise)
         {
             if (ModelState.IsValid)
             {
@@ -139,7 +134,7 @@ namespace GetFit.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,MuscleGroup,Description")] Excercise excercise)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description, Category")] Excercise excercise)
         {
 
 
