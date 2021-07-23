@@ -26,19 +26,8 @@ namespace GetFit.Web.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DescriptionSortParm"] = sortOrder == "description" ? "description_desc" : "muscleGroup";
-            ViewData["NumberOfWorkoutsSortParm"] = sortOrder == "workouts" ? "workouts_desc" : "workouts";
+            ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
             ViewData["CurrentSort"] = sortOrder;
-
-
-            if (!string.IsNullOrEmpty(sortOrder))
-            {
-                ViewData["CurrentFilter"] = currentFilter;
-            }
-            else
-            {
-                ViewData["CurrentFilter"] = searchString;
-            }
 
             if (searchString != null)
             {
@@ -49,33 +38,35 @@ namespace GetFit.Web.Controllers
                 searchString = currentFilter;
             }
 
+            ViewData["CurrentFilter"] = searchString;
+
+            var workoutPrograms = _repository.GetAllAsQuery();
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                var workoutPrograms = await _repository.GetAll();
-
-                WorkoutPrograms = workoutPrograms.Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
+                workoutPrograms = workoutPrograms
+                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString))
                     .Distinct();
             }
-            else
-            {
-                WorkoutPrograms = await _repository.GetAll();
-            }
 
-            Ordered = sortOrder switch
+            IOrderedQueryable<WorkoutProgram> newList = sortOrder switch
             {
-                "name_desc" => WorkoutPrograms.OrderByDescending(e => e.Name).ToList(),
-                "muscleGroup" => WorkoutPrograms.OrderBy(e => e.Description).ToList(),
-                "muscleGroup_desc" => WorkoutPrograms.OrderByDescending(e => e.Description).ToList(),
-                "workouts" => WorkoutPrograms.OrderBy(e => e.Workouts.Count).ToList(),
-                "workouts_desc" => WorkoutPrograms.OrderByDescending(e => e.Workouts.Count).ToList(),
-                _ => WorkoutPrograms.OrderBy(e => e.Name).ToList(),
+                "name_desc" => workoutPrograms.OrderByDescending(e => e.Name),
+                "muscleGroup" => workoutPrograms.OrderBy(e => e.Description),
+                "muscleGroup_desc" => workoutPrograms.OrderByDescending(e => e.Description),
+                _ => workoutPrograms.OrderBy(e => e.Name),
             };
-            int pageSize = 10;
+            int pageSize = 30;
+            try
+            {
+                return View(await PaginatedList<WorkoutProgram>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
 
-            var paginatedList = await PaginatedList<WorkoutProgram>.CreateAsync(Ordered2, pageNumber ?? 1, pageSize);
-
-            return View(paginatedList);
+            }
+            catch (System.Exception e)
+            {
+                return View(nameof(Index));
+            }
 
         }
 

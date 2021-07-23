@@ -14,7 +14,6 @@ namespace GetFit.Web.Controllers
         private readonly IRepository<Workout> _repository;
 
         public List<Workout> Ordered { get; set; }
-        public IQueryable<Workout> Ordered2 { get; set; }
         public IEnumerable<Workout> Workouts { get; set; }
 
         public WorkoutsController(IRepository<Workout> repository)
@@ -27,17 +26,8 @@ namespace GetFit.Web.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DescriptionSortParm"] = sortOrder == "description" ? "description_desc" : "description";
-            ViewData["NumberOfExcercisesSortParm"] = sortOrder == "excercises" ? "excercises_desc" : "excercises";
-
-            if (!string.IsNullOrEmpty(sortOrder))
-            {
-                ViewData["CurrentFilter"] = currentFilter;
-            }
-            else
-            {
-                ViewData["CurrentFilter"] = searchString;
-            }
+            ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
+            ViewData["CurrentSort"] = sortOrder;
 
             if (searchString != null)
             {
@@ -48,32 +38,35 @@ namespace GetFit.Web.Controllers
                 searchString = currentFilter;
             }
 
+            ViewData["CurrentFilter"] = searchString;
+
+            var workouts = _repository.GetAllAsQuery();
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                var workouts = await _repository.GetAll();
-
-                Workouts = workouts.Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
-                             || w.Description.Contains(searchString));                  
-            }
-            else
-            {
-                Workouts = await _repository.GetAll();
+                workouts = workouts
+                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
+                             || w.Description.Contains(searchString))
+                    .Distinct();
             }
 
-            Ordered = sortOrder switch
+            IOrderedQueryable<Workout> newList = sortOrder switch
             {
-                "name_desc" => Workouts.OrderByDescending(e => e.Name).ToList(),
-                "description" => Workouts.OrderBy(e => e.Description).ToList(),
-                "description_desc" => Workouts.OrderByDescending(e => e.Description).ToList(),
-                "excercises" => Workouts.OrderBy(e => e.Excercises.Count).ToList(),
-                "excercises_desc" => Workouts.OrderByDescending(e => e.Excercises.Count).ToList(),
-                _ => Workouts.OrderBy(e => e.Name).ToList(),
+                "name_desc" => workouts.OrderByDescending(e => e.Name),
+                "muscleGroup" => workouts.OrderBy(e => e.Description),
+                "muscleGroup_desc" => workouts.OrderByDescending(e => e.Description),
+                _ => workouts.OrderBy(e => e.Name),
             };
-            int pageSize = 15;
+            int pageSize = 30;
+            try
+            {
+                return View(await PaginatedList<Workout>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
 
-            var paginatedList = await PaginatedList<Workout>.CreateAsync(Ordered2, pageNumber ?? 1, pageSize);
-            
-            return View(paginatedList);
+            }
+            catch (System.Exception e)
+            {
+                return View(nameof(Index));
+            }
 
         }
 
@@ -85,7 +78,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workout = _repository.GetById(id);
+            var workout = await _repository.GetById(id);
             if (workout == null)
             {
                 return NotFound();
@@ -109,8 +102,8 @@ namespace GetFit.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(workout);
-                _repository.SaveChanges();
+                await _repository.Add(workout);
+                await _repository.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(workout);
@@ -124,7 +117,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workout = _repository.GetById(id);
+            var workout = await _repository.GetById(id);
             if (workout == null)
             {
                 return NotFound();
@@ -175,7 +168,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workout = _repository.GetById(id);
+            var workout = await _repository.GetById(id);
             if (workout == null)
             {
                 return NotFound();

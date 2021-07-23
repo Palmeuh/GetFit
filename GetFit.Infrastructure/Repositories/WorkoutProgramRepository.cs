@@ -36,5 +36,13 @@ namespace GetFit.Infrastructure.Repositories
             return base.Edit(workoutProgram);
 
         }
+
+        public override IQueryable<WorkoutProgram> GetAllAsQuery()
+        {
+            return _context.Set<WorkoutProgram>()
+                .Include(w => w.Workouts)
+                .ThenInclude(e => e.Excercises)
+                .AsQueryable();
+        }
     }
 }
