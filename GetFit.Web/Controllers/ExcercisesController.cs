@@ -45,30 +45,29 @@ namespace GetFit.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
+
             
-            var excercises =  _repository.GetAllAsQuery();
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                excercises = excercises
-                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
-                             || w.Description.Contains(searchString))
-                    .Distinct();
-
-                var excercisesFind = await _repository.Find(w => w.Name.Contains(searchString));
-
+                Excercises = await _repository.Find(w => w.Name.Contains(searchString) || w.Description.Contains(searchString)); 
             }
-            IOrderedQueryable<Excercise> newList = sortOrder switch
+            else
             {
-                "name_desc" => excercises.OrderByDescending(e => e.Name),
-                "muscleGroup" => excercises.OrderBy(e => e.Category),
-                "muscleGroup_desc" => excercises.OrderByDescending(e => e.Category),
-                _ => excercises.OrderBy(e => e.Name),
+                Excercises = await _repository.GetAll();
+            }
+
+            IEnumerable<Excercise> newList = sortOrder switch
+            {
+                "name_desc" => Excercises.OrderByDescending(e => e.Name),
+                "muscleGroup" => Excercises.OrderBy(e => e.Category),
+                "muscleGroup_desc" => Excercises.OrderByDescending(e => e.Category),
+                _ => Excercises.OrderBy(e => e.Name),
             };
             int pageSize = 30;
             try            
             {
-                return View(await PaginatedList<Excercise>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
+                return View(PaginatedList<Excercise>.Create(newList, pageNumber ?? 1, pageSize));
 
             }
             catch (System.Exception e)

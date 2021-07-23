@@ -42,6 +42,7 @@ namespace GetFit.Infrastructure.Repositories
         public virtual async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>()
+                .Distinct()
                 .AsQueryable()
                 .Where(predicate)
                 .ToListAsync();
