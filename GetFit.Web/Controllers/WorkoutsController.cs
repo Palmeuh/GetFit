@@ -13,7 +13,6 @@ namespace GetFit.Web.Controllers
     {
         private readonly IRepository<Workout> _repository;
 
-        public List<Workout> Ordered { get; set; }
         public IEnumerable<Workout> Workouts { get; set; }
 
         public WorkoutsController(IRepository<Workout> repository)
@@ -44,23 +43,26 @@ namespace GetFit.Web.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                workouts = workouts
-                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
-                             || w.Description.Contains(searchString))
-                    .Distinct();
+                Workouts = await _repository.Find(
+                    w => w.Name.Contains(searchString) ||
+                    w.Description.Contains(searchString));
+            }
+            else
+            {
+                Workouts = await _repository.GetAll();
             }
 
-            IOrderedQueryable<Workout> newList = sortOrder switch
+            IEnumerable<Workout> newList = sortOrder switch
             {
-                "name_desc" => workouts.OrderByDescending(e => e.Name),
-                "muscleGroup" => workouts.OrderBy(e => e.Description),
-                "muscleGroup_desc" => workouts.OrderByDescending(e => e.Description),
-                _ => workouts.OrderBy(e => e.Name),
+                "name_desc" => Workouts.OrderByDescending(e => e.Name),
+                "muscleGroup" => Workouts.OrderBy(e => e.Description),
+                "muscleGroup_desc" => Workouts.OrderByDescending(e => e.Description),
+                _ => Workouts.OrderBy(e => e.Name),
             };
             int pageSize = 30;
             try
             {
-                return View(await PaginatedList<Workout>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
+                return View(PaginatedList<Workout>.Create(newList, pageNumber ?? 1, pageSize));
 
             }
             catch (System.Exception e)

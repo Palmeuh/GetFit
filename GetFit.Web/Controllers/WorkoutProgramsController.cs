@@ -11,9 +11,7 @@ namespace GetFit.Web.Controllers
 {
     public class WorkoutProgramsController : Controller
     {
-        private readonly IRepository<WorkoutProgram> _repository;
-        public List<WorkoutProgram> Ordered { get; set; }
-        public IQueryable<WorkoutProgram> Ordered2 { get; set; }
+        private readonly IRepository<WorkoutProgram> _repository;      
 
         public IEnumerable<WorkoutProgram> WorkoutPrograms { get; set; }
 
@@ -40,27 +38,30 @@ namespace GetFit.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var workoutPrograms = _repository.GetAllAsQuery();
+            
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                workoutPrograms = workoutPrograms
-                    .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
-                             || w.Description.Contains(searchString))
-                    .Distinct();
+                WorkoutPrograms = await _repository.Find
+                    (wp => wp.Name.Contains(searchString) 
+                    || wp.Description.Contains(searchString));
+            }
+            else
+            {
+                WorkoutPrograms = await _repository.GetAll();
             }
 
-            IOrderedQueryable<WorkoutProgram> newList = sortOrder switch
+            IEnumerable<WorkoutProgram> newList = sortOrder switch
             {
-                "name_desc" => workoutPrograms.OrderByDescending(e => e.Name),
-                "muscleGroup" => workoutPrograms.OrderBy(e => e.Description),
-                "muscleGroup_desc" => workoutPrograms.OrderByDescending(e => e.Description),
-                _ => workoutPrograms.OrderBy(e => e.Name),
+                "name_desc" => WorkoutPrograms.OrderByDescending(e => e.Name),
+                "muscleGroup" => WorkoutPrograms.OrderBy(e => e.Description),
+                "muscleGroup_desc" => WorkoutPrograms.OrderByDescending(e => e.Description),
+                _ => WorkoutPrograms.OrderBy(e => e.Name),
             };
             int pageSize = 30;
             try
             {
-                return View(await PaginatedList<WorkoutProgram>.CreateAsync(newList.AsNoTracking(), pageNumber ?? 1, pageSize));
+                return View( PaginatedList<WorkoutProgram>.Create(newList, pageNumber ?? 1, pageSize));
 
             }
             catch (System.Exception e)
