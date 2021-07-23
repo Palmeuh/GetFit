@@ -32,6 +32,8 @@ namespace GetFit.Web.Controllers
             ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
             ViewData["CurrentSort"] = sortOrder;
 
+            
+
             if (searchString != null)
             {
                 pageNumber = 1;
@@ -43,6 +45,7 @@ namespace GetFit.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
+            
             var excercises =  _repository.GetAllAsQuery();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -51,8 +54,10 @@ namespace GetFit.Web.Controllers
                     .Where(w => w.Name.ToUpper().Contains(searchString.ToUpper())
                              || w.Description.Contains(searchString))
                     .Distinct();
-            }
 
+                var excercisesFind = await _repository.Find(w => w.Name.Contains(searchString));
+
+            }
             IOrderedQueryable<Excercise> newList = sortOrder switch
             {
                 "name_desc" => excercises.OrderByDescending(e => e.Name),

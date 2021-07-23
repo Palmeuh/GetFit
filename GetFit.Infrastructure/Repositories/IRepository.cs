@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure.Repositories
@@ -13,5 +15,6 @@ namespace GetFit.Infrastructure.Repositories
         T Remove(T entity);
         Task SaveChanges();
         IQueryable<T> GetAllAsQuery();
+        Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
     }
 }
