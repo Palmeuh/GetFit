@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure.Repositories
 {
@@ -12,12 +13,12 @@ namespace GetFit.Infrastructure.Repositories
 
         }
 
-        public override IEnumerable<WorkoutProgram> GetAll()
+        public override async Task<IEnumerable<WorkoutProgram>> GetAll()
         {
-            var workouts = _context.WorkoutPrograms
+            var workouts = await _context.WorkoutPrograms
                 .Include(w => w.Workouts)
                 .ThenInclude(e => e.Excercises)
-                .ToList();
+                .ToListAsync();
 
             return workouts;
         }

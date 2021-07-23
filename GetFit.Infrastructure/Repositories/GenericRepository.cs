@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure.Repositories
 {
@@ -15,20 +16,22 @@ namespace GetFit.Infrastructure.Repositories
             _context = context;
         }
 
-        public virtual T Add(T entity)
-        {
-            return _context.Add(entity).Entity;
+        public virtual async Task Add(T entity)
+        { 
+            // await Context.AddAsync(entity);
+            await _context.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public virtual IQueryable<T> GetAllAsQuery()
         {
-            return _context.Set<T>();
+            return  _context.Set<T>().AsQueryable();
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
-            return _context.Set<T>()                
-                .ToList();
+            return await _context.Set<T>()                
+                .ToListAsync();
         }
 
         public virtual T Remove(T entity)
@@ -36,27 +39,28 @@ namespace GetFit.Infrastructure.Repositories
             return _context.Remove(entity).Entity;
         }
 
-        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
+        public virtual async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
         {
-            return _context.Set<T>()
+            return await _context.Set<T>()
                 .AsQueryable()
                 .Where(predicate)
-                .ToList();
+                .ToListAsync();
         }
 
-        public virtual T GetById(int? id)
+        public virtual async Task<T> GetById(int? id)
         {
-            return _context.Find<T>(id);
+            return await _context.FindAsync<T>(id);
         }
 
-        public virtual void SaveChanges()
+        public virtual async Task SaveChanges()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public virtual T Edit(T entity)
         {
-            return _context.Update(entity).Entity;
+            return  _context.Update(entity).Entity;
+            
         }
     }
 }
