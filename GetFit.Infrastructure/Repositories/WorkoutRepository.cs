@@ -1,7 +1,9 @@
 ﻿using GetFit.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure.Repositories
@@ -50,6 +52,17 @@ namespace GetFit.Infrastructure.Repositories
             return _context.Set<Workout>()
                 .Include(e => e.Excercises)
                 .AsQueryable();
+        }
+
+        public override async Task<IEnumerable<Workout>> Find(Expression<Func<Workout, bool>> predicate)
+        {
+
+            return await _context.Set<Workout>()
+                .Include(e => e.Excercises)
+                .Distinct()
+                .AsQueryable()
+                .Where(predicate)
+                .ToListAsync();
         }
     }
 }
