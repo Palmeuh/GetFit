@@ -34,7 +34,7 @@ namespace GetFit.Infrastructure.Repositories
                  .FirstOrDefaultAsync();
         }
 
-        public override WorkoutProgram Edit(WorkoutProgram entity)
+        public override WorkoutProgram EditAsync(WorkoutProgram entity)
         {
 
             WorkoutProgram workoutProgram = _context.WorkoutPrograms
