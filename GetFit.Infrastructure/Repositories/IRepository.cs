@@ -11,10 +11,9 @@ namespace GetFit.Infrastructure.Repositories
         Task<IEnumerable<T>> GetAll();
         Task<T> GetById(int? id);
         Task Add(T entity);
-        T Edit(T entity);
+        T EditAsync(T entity);
         T Remove(T entity);
         Task SaveChanges();
-        IQueryable<T> GetAllAsQuery();
         Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
     }
 }

@@ -43,7 +43,7 @@ namespace GetFit.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var workouts = _repository.GetAllAsQuery();
+            
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -238,7 +238,7 @@ namespace GetFit.Web.Controllers
             {
                 try
                 {
-                    _repository.Edit(workout);
+                    _repository.EditAsync(workout);
                     await _repository.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)

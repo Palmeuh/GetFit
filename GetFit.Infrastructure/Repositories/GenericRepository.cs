@@ -58,7 +58,7 @@ namespace GetFit.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public virtual T Edit(T entity)
+        public virtual T EditAsync(T entity)
         {
             return _context.Update(entity).Entity;
 

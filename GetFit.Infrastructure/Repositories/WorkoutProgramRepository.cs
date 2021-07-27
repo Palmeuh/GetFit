@@ -1,7 +1,9 @@
 ﻿using GetFit.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure.Repositories
@@ -23,26 +25,34 @@ namespace GetFit.Infrastructure.Repositories
             return workouts;
         }
 
-        public override WorkoutProgram Edit(WorkoutProgram entity)
+        public override WorkoutProgram EditAsync(WorkoutProgram entity)
         {
 
-            var workoutProgram = _context.WorkoutPrograms
+            WorkoutProgram workoutProgram = _context.WorkoutPrograms
+                .Include(w => w.Workouts)
+                .ThenInclude(e => e.Excercises)
                 .FirstOrDefault(e => e.Id == entity.Id);
 
             workoutProgram.Name = entity.Name;
             workoutProgram.Description = entity.Description;
 
 
-            return base.Edit(workoutProgram);
+            return base.EditAsync(workoutProgram);
 
         }
 
-        public override IQueryable<WorkoutProgram> GetAllAsQuery()
+        public override async Task<IEnumerable<WorkoutProgram>> Find(Expression<Func<WorkoutProgram, bool>> predicate)
         {
-            return _context.Set<WorkoutProgram>()
+            return await _context.Set<WorkoutProgram>()
                 .Include(w => w.Workouts)
                 .ThenInclude(e => e.Excercises)
-                .AsQueryable();
+                .Distinct()
+                .AsQueryable()
+                .Where(predicate)
+                .ToListAsync();
+           
         }
+
+
     }
 }

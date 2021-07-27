@@ -11,7 +11,7 @@ namespace GetFit.Infrastructure.Repositories
         }
 
 
-        public override Excercise Edit(Excercise entity)
+        public override Excercise EditAsync(Excercise entity)
         {
 
             var excercise = _context.Excercise
@@ -21,7 +21,7 @@ namespace GetFit.Infrastructure.Repositories
             excercise.Category = entity.Category;
             excercise.Description = entity.Description;
 
-            return base.Edit(excercise);
+            return base.EditAsync(excercise);
 
         }
 

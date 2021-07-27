@@ -25,16 +25,16 @@ namespace GetFit.Infrastructure.Repositories
             return workouts;
         }
 
-        public override Workout Edit(Workout entity)
+        public override Workout EditAsync(Workout entity)
         {
-            var workout = _context.Workouts
-                .Single(w => w.Id == entity.Id);
+            var workout =   _context.Workouts
+                .FirstOrDefault(w => w.Id == entity.Id);
 
             workout.Name = entity.Name;
             workout.Description = entity.Description;
 
 
-            return base.Edit(workout);
+            return base.EditAsync(workout);
         }
 
         public override async Task<Workout> GetById(int? id)
@@ -47,12 +47,7 @@ namespace GetFit.Infrastructure.Repositories
             return workout;
         }
 
-        public override IQueryable<Workout> GetAllAsQuery()
-        {
-            return _context.Set<Workout>()
-                .Include(e => e.Excercises)
-                .AsQueryable();
-        }
+       
 
         public override async Task<IEnumerable<Workout>> Find(Expression<Func<Workout, bool>> predicate)
         {

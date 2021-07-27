@@ -147,7 +147,7 @@ namespace GetFit.Web.Controllers
             {
                 try
                 {
-                    _repository.Edit(excercise);
+                    _repository.EditAsync(excercise);
                     await _repository.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
