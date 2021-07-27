@@ -34,6 +34,48 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<table class="table">
+    <a asp-action="AddWorkoutsToProgram" asp-route-objectId="@Model.Id">Add or remove excercises</a>
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DescriptionSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Description</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NumberOfWorkoutsSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Workouts</a>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.Workouts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @{
+                        int workoutCount = item.Excercises.Count;
+                    }
+                    @Html.DisplayFor(item => workoutCount)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
