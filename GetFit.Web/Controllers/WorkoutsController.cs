@@ -123,6 +123,10 @@ namespace GetFit.Web.Controllers
             ViewData["CurrentSort"] = sortOrder;
 
             var currentWorkout = await _repository.GetById(workout.Id);
+            if (currentWorkout == null)
+            {
+                currentWorkout = await _repository.GetById(objectId);
+            }
 
             if (objectId == null)
             {
@@ -185,7 +189,19 @@ namespace GetFit.Web.Controllers
 
             return RedirectToAction("AddExcercisesToWorkout", workout);
 
+        }
 
+        public async Task<IActionResult> RemoveExcercise(int? workoutId, int? excerciseId)
+        {
+            var workout = await _repository.GetById(workoutId);
+            var excercise = await _repositoryExcercise.GetById(excerciseId);
+
+            workout.Excercises.Remove(excercise);
+
+            await _repository.SaveChanges();
+            await _repositoryExcercise.SaveChanges();
+
+            return RedirectToAction("AddExcercisesToWorkout", workout);
         }
 
 
