@@ -1,0 +1,156 @@
+﻿@model GetFit.Web.ViewModels.AddWorkoutToProgramViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>ADD Workouts TO Program</h1>
+
+<div>
+    <h4>Workout</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WorkoutProgram.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WorkoutProgram.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.WorkoutProgram.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WorkoutProgram.Description)
+        </dd>
+        <dt class="col-sm-2">
+            Number of workouts
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                int workoutCount = Model.WorkoutProgram.Workouts.Count;
+                Html.DisplayFor(item => workoutCount);
+            }
+        </dd>
+    </dl>
+</div>
+
+<div class="tableContainer">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Remove
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var workout in Model.WorkoutProgram.Workouts)
+            {
+                <tr class="tableRow">
+                    <td class="excerciseName">
+                        @Html.DisplayFor(modelItem => workout.Name)
+                    </td>                   
+                    <td class="excerciseDescription">
+                        @Html.DisplayFor(modelItem => workout.Description)
+                    </td>
+                    <td>
+                        <a asp-action="RemoveWorkout" asp-route-workoutId="@workout.Id" asp-route-workoutProgramId="@Model.WorkoutProgram.Id">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<section id="excerciseIntro">
+
+    <form asp-action="AddExcercisesToWorkout" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                <input type="submit" value="Search" class="btn btn-primary" asp-route-objectId="@ViewData["ObjectId"]" />
+
+                <a asp-action="AddExcercisesToWorkout">Back to Full List</a>
+            </p>
+        </div>
+    </form>
+    @if (Model != null)
+    {
+        <div class="tableContainer">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <a asp-action="AddExcercisesToWorkout" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-objectId="@ViewData["ObjectId"]">Name</a>
+                        </th>
+                        <th>
+                            <a asp-action="AddExcercisesToWorkout" asp-route-sortOrder="@ViewData["MuscleGroupSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-objectId="@ViewData["ObjectId"]">Category</a>
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.PaginatedList)
+                    {
+                        <tr class="tableRow">
+                            <td class="excerciseName">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>                           
+                            <td class="excerciseDescription">
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td class="tableActions">
+                                <a asp-action="AddWorkout" asp-route-workoutProgramId="@Model.WorkoutProgram.Id" asp-route-workoutId="@item.Id" class="bi bi-alarm">Add To Workout</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+        var prevDisabled = !Model.PaginatedList.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.PaginatedList.HasNextPage ? "disabled" : "";
+
+
+        <a asp-action="AddWorkoutsToProgram"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.PaginatedList.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           asp-route-objectId="@ViewData["ObjectId"]"
+           class="btn btn-default @prevDisabled">
+            Previous
+        </a>
+        <a asp-action="AddWorkoutsToProgram"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.PaginatedList.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           asp-route-objectId="@ViewData["ObjectId"]"
+           class="btn btn-default @nextDisabled">
+            Next
+        </a>
+    }
+    else
+    {
+        <div>
+            <h1>Not Found! </h1>
+        </div>
+    }
+</section>
+
+
