@@ -25,7 +25,16 @@ namespace GetFit.Infrastructure.Repositories
             return workouts;
         }
 
-        public override WorkoutProgram EditAsync(WorkoutProgram entity)
+        public override async Task<WorkoutProgram> GetById(int? id)
+        {
+            return await _context.WorkoutPrograms
+                 .Where(wp => wp.Id == id)
+                 .Include(w => w.Workouts)
+                 .ThenInclude(e => e.Excercises)
+                 .FirstOrDefaultAsync();
+        }
+
+        public override WorkoutProgram Edit(WorkoutProgram entity)
         {
 
             WorkoutProgram workoutProgram = _context.WorkoutPrograms
