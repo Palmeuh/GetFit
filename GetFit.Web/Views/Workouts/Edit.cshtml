@@ -30,6 +30,48 @@
     </div>
 </div>
 
+<div class="tableContainer">
+    <a asp-action="AddExcercisesToWorkout" asp-route-objectId="@Model.Id">Add more workouts</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Remove
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var excercise in Model.Excercises)
+            {
+                <tr class="tableRow">
+                    <td class="excerciseName">
+                        @Html.DisplayFor(modelItem => excercise.Name)
+                    </td>
+                    <td class="excerciseCategory">
+                        @Html.DisplayFor(modelitem => excercise.Category)
+                    </td>
+                    <td class="excerciseDescription">
+                        @Html.DisplayFor(modelItem => excercise.Description)
+                    </td>
+                    <td>
+                    <a asp-action="RemoveExcercise" asp-route-excerciseId="@excercise.Id" asp-route-workoutId="@Model.Id">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
