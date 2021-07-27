@@ -12,19 +12,16 @@ namespace GetFit.Web.Controllers
 {
     public class WorkoutProgramsController : Controller
     {
-        private readonly IRepository<WorkoutProgram> _repository;
-        private readonly IRepository<Workout> _workoutRepository;
-        private readonly IRepository<Excercise> _excerciseRepository;
+        
+        private readonly IUnitOfWork _unitOfWork;
 
         public IEnumerable<WorkoutProgram> WorkoutPrograms { get; set; }
         public IEnumerable<Workout> Workouts { get; set; }
         public IEnumerable<Excercise> Excercises { get; set; }
 
-        public WorkoutProgramsController(IRepository<WorkoutProgram> repository, IRepository<Workout> workoutRepository, IRepository<Excercise> excerciseRepository)
-        {
-            _repository = repository;
-            _workoutRepository = workoutRepository;
-            _excerciseRepository = excerciseRepository;
+        public WorkoutProgramsController(IUnitOfWork unitOfWork)
+        {            
+            _unitOfWork = unitOfWork;
         }
 
         // GET: WorkoutPrograms
@@ -47,13 +44,13 @@ namespace GetFit.Web.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                WorkoutPrograms = await _repository.Find
+                WorkoutPrograms = await _unitOfWork.WorkoutProgramRepository.Find
                     (wp => wp.Name.Contains(searchString)
                     || wp.Description.Contains(searchString));
             }
             else
             {
-                WorkoutPrograms = await _repository.GetAll();
+                WorkoutPrograms = await _unitOfWork.WorkoutProgramRepository.GetAll();
             }
 
             IEnumerable<WorkoutProgram> newList = sortOrder switch
@@ -81,10 +78,10 @@ namespace GetFit.Web.Controllers
             ViewData["MuscleGroupSortParm"] = sortOrder == "muscleGroup" ? "muscleGroup_desc" : "muscleGroup";
             ViewData["CurrentSort"] = sortOrder;
 
-            var currentWorkoutProgram = await _repository.GetById(workoutProgram.Id);
+            var currentWorkoutProgram = await _unitOfWork.WorkoutProgramRepository.GetById(workoutProgram.Id);
             if (currentWorkoutProgram == null)
             {
-                currentWorkoutProgram = await _repository.GetById(objectId);
+                currentWorkoutProgram = await _unitOfWork.WorkoutProgramRepository.GetById(objectId);
             }
 
             if (objectId == null)
@@ -110,13 +107,13 @@ namespace GetFit.Web.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                Workouts = await _workoutRepository.Find(
+                Workouts = await _unitOfWork.WorkoutRepository.Find(
                     w => w.Name.Contains(searchString) ||
                     w.Description.Contains(searchString));
             }
             else
             {
-                Workouts = await _workoutRepository.GetAll();
+                Workouts = await _unitOfWork.WorkoutRepository.GetAll();
             }
 
             IEnumerable<Workout> newList = sortOrder switch
@@ -138,13 +135,12 @@ namespace GetFit.Web.Controllers
 
         public async Task<IActionResult> AddWorkout(int? workoutId, int? workoutProgramId)
         {
-            var workoutProgram = await _repository.GetById(workoutProgramId);
-            var workout = await _workoutRepository.GetById(workoutId);
+            var workoutProgram = await _unitOfWork.WorkoutProgramRepository.GetById(workoutProgramId);
+            var workout = await _unitOfWork.WorkoutRepository.GetById(workoutId);
 
             workoutProgram.Workouts.Add(workout);
 
-            await _repository.SaveChanges();
-            await _workoutRepository.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
             return RedirectToAction("AddWorkoutsToProgram", workoutProgram);
 
@@ -152,13 +148,12 @@ namespace GetFit.Web.Controllers
 
         public async Task<IActionResult> RemoveWorkout(int? workoutId, int? workoutProgramId)
         {
-            var workoutProgram = await _repository.GetById(workoutProgramId);
-            var workout = await _workoutRepository.GetById(workoutId);
+            var workoutProgram = await _unitOfWork.WorkoutProgramRepository.GetById(workoutProgramId);
+            var workout = await _unitOfWork.WorkoutRepository.GetById(workoutId);
 
             workoutProgram.Workouts.Remove(workout);
 
-            await _repository.SaveChanges();
-            await _workoutRepository.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
             return RedirectToAction("AddWorkoutsToProgram", workoutProgram);
         }
@@ -172,7 +167,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workoutProgram = await _repository.GetById(id);
+            var workoutProgram = await _unitOfWork.WorkoutProgramRepository.GetById(id);
             if (workoutProgram == null)
             {
                 return NotFound();
@@ -196,8 +191,8 @@ namespace GetFit.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _repository.Add(workoutProgram);
-                await _repository.SaveChanges();
+                await _unitOfWork.WorkoutProgramRepository.Add(workoutProgram);
+                await _unitOfWork.SaveChangesAsync();
                 return RedirectToAction("AddWorkoutsToProgram", workoutProgram);
             }
             return View(workoutProgram);
@@ -211,7 +206,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workoutProgram = await _repository.GetById(id);
+            var workoutProgram = await _unitOfWork.WorkoutProgramRepository.GetById(id);
             if (workoutProgram == null)
             {
                 return NotFound();
@@ -235,8 +230,8 @@ namespace GetFit.Web.Controllers
             {
                 try
                 {
-                    _repository.EditAsync(workoutProgram);
-                    await _repository.SaveChanges();
+                    _unitOfWork.WorkoutProgramRepository.EditAsync(workoutProgram);
+                    await _unitOfWork.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -262,7 +257,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var workoutProgram = await _repository.GetById(id);
+            var workoutProgram = await _unitOfWork.WorkoutProgramRepository.GetById(id);
             if (workoutProgram == null)
             {
                 return NotFound();
@@ -276,15 +271,15 @@ namespace GetFit.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var workoutProgram = await _repository.GetById(id);
-            _repository.Remove(workoutProgram);
-            await _repository.SaveChanges();
+            var workoutProgram = await _unitOfWork.WorkoutProgramRepository.GetById(id);
+            _unitOfWork.WorkoutProgramRepository.Remove(workoutProgram);
+            await _unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> WorkoutProgramExistsAsync(int id)
         {
-            var workoutProgram = await _repository.GetAll();
+            var workoutProgram = await _unitOfWork.WorkoutProgramRepository.GetAll();
 
             return workoutProgram.Any(e => e.Id == id);
         }
