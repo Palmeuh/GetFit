@@ -31,7 +31,7 @@
 </div>
 
 <div class="tableContainer">
-    <a asp-action="AddExcercisesToWorkout" asp-route-objectId="@Model.Id">Add more workouts</a>
+    <a asp-action="AddExcercisesToWorkout" asp-route-objectId="@Model.Id">Add or remove excercises</a>
 
     <table class="table">
         <thead>
@@ -45,9 +45,7 @@
                 <th>
                     Description
                 </th>
-                <th>
-                    Remove
-                </th>
+               
             </tr>
         </thead>
         <tbody>
@@ -63,9 +61,7 @@
                     <td class="excerciseDescription">
                         @Html.DisplayFor(modelItem => excercise.Description)
                     </td>
-                    <td>
-                    <a asp-action="RemoveExcercise" asp-route-excerciseId="@excercise.Id" asp-route-workoutId="@Model.Id">Remove</a>
-                    </td>
+                    
                 </tr>
             }
         </tbody>

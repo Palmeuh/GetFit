@@ -48,6 +48,9 @@
                 <th>
                     Description
                 </th>
+                <th>
+                    Remove
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -62,7 +65,10 @@
                     </td>
                     <td class="excerciseDescription">
                         @Html.DisplayFor(modelItem => excercise.Description)
-                    </td>                   
+                    </td>
+                    <td>
+                        <a asp-action="RemoveExcercise" asp-route-excerciseId="@excercise.Id" asp-route-workoutId="@Model.Workout.Id">Remove</a>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -104,20 +110,20 @@
                 <tbody>
                     @foreach (var item in Model.PaginatedList)
                     {
-                        <tr class="tableRow">
-                            <td class="excerciseName">
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td class="excerciseCategory">
-                                @Html.DisplayFor(modelitem => item.Category)
-                            </td>
-                            <td class="excerciseDescription">
-                                @Html.DisplayFor(modelItem => item.Description)
-                            </td>
-                            <td class="tableActions">
-                                <a asp-action="AddExcercise" asp-route-workoutId="@Model.Workout.Id" asp-route-excerciseId="@item.Id" class="bi bi-alarm">Add To Workout</a>
-                            </td>
-                        </tr>
+                    <tr class="tableRow">
+                        <td class="excerciseName">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="excerciseCategory">
+                            @Html.DisplayFor(modelitem => item.Category)
+                        </td>
+                        <td class="excerciseDescription">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td class="tableActions">
+                            <a asp-action="AddExcercise" asp-route-workoutId="@Model.Workout.Id" asp-route-excerciseId="@item.Id" class="bi bi-alarm">Add To Workout</a>
+                        </td>                        
+                    </tr>
                     }
                 </tbody>
             </table>
