@@ -11,42 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Areas\Identity\Pages\Account\Login.cshtml" />
-    <None Remove="Areas\Identity\Pages\Account\Register.cshtml" />
-    <None Remove="Areas\Identity\Pages\Account\_ViewImports.cshtml" />
-    <None Remove="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
-    <None Remove="Areas\Identity\Pages\_ViewImports.cshtml" />
-    <None Remove="Areas\Identity\Pages\_ViewStart.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Areas\Identity\Pages\Account\Login.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Areas\Identity\Pages\Account\Register.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Areas\Identity\Pages\Account\_ViewImports.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Areas\Identity\Pages\_ViewImports.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Areas\Identity\Pages\_ViewStart.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />

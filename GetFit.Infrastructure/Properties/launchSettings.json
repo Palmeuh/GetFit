@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "GetFit.Infrastructure": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\fredr\\source\\repos\\GetFit\\GetFit.Web\\bin\\Debug\\net5.0\\GetFit.exe",
+      "nativeDebugging": false
+    }
+  }
+}

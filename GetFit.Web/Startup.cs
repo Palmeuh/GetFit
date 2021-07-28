@@ -39,6 +39,7 @@ namespace GetFit.Web
             services.AddScoped<IRepository<Excercise>, ExcerciseRepository>();
             services.AddScoped<IRepository<Workout>, WorkoutRepository>();
             services.AddScoped<IRepository<WorkoutProgram>, WorkoutProgramRepository>();
+            services.AddScoped<IRepository<WorkoutPlan>, WorkoutPlanRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 

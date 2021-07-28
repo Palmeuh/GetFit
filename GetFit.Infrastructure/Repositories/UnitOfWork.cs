@@ -9,6 +9,7 @@ namespace GetFit.Infrastructure.Repositories
         IRepository<Excercise> ExcerciseRepository { get; }
         IRepository<Workout> WorkoutRepository { get; }
         IRepository<WorkoutProgram> WorkoutProgramRepository { get; }
+        IRepository<WorkoutPlan> WorkoutPlanRepository { get; }
 
         Task SaveChangesAsync();
     }
@@ -21,8 +22,6 @@ namespace GetFit.Infrastructure.Repositories
         {
             _context = context;
         }
-
-
 
         private IRepository<Excercise> _excerciseRepository;
         public IRepository<Excercise> ExcerciseRepository
@@ -60,6 +59,19 @@ namespace GetFit.Infrastructure.Repositories
                     _workoutProgramRepository = new WorkoutProgramRepository(_context);
                 }
                 return _workoutProgramRepository;
+            }
+        }
+
+        private IRepository<WorkoutPlan> _workoutPlanRepository;
+        public IRepository<WorkoutPlan> WorkoutPlanRepository
+        {
+            get
+            {
+                if (_workoutPlanRepository == null)
+                {
+                    _workoutPlanRepository = new WorkoutPlanRepository(_context);
+                }
+                return _workoutPlanRepository;
             }
         }
 
