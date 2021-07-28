@@ -1,4 +1,5 @@
 ﻿using GetFit.Domain.Models;
+using System.Threading.Tasks;
 
 namespace GetFit.Infrastructure.Repositories
 {
@@ -9,7 +10,7 @@ namespace GetFit.Infrastructure.Repositories
         IRepository<Workout> WorkoutRepository { get; }
         IRepository<WorkoutProgram> WorkoutProgramRepository { get; }
 
-        void SaveChanges();
+        Task SaveChangesAsync();
     }
 
     public class UnitOfWork : IUnitOfWork
@@ -62,9 +63,9 @@ namespace GetFit.Infrastructure.Repositories
             }
         }
 
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

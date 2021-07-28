@@ -12,16 +12,16 @@ namespace GetFit.Web.Controllers
 {
     public class ExcercisesController : Controller
     {
-        private readonly IRepository<Excercise> _repository;
-        private readonly GetFitContext _getFitContext;
+       
+        private readonly IUnitOfWork _unitOfWork;
 
         public List<Excercise> Ordered { get; set; }
         public IEnumerable<Excercise> Excercises { get; set; }
 
-        public ExcercisesController(IRepository<Excercise> repository, GetFitContext getFitContext)
+        public ExcercisesController(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
-            _getFitContext = getFitContext;
+            
+            _unitOfWork = unitOfWork;
         }
 
         // GET: Excercises
@@ -44,11 +44,11 @@ namespace GetFit.Web.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                Excercises = await _repository.Find(w => w.Name.Contains(searchString) || w.Description.Contains(searchString));
+                Excercises = await _unitOfWork.ExcerciseRepository.Find(w => w.Name.Contains(searchString) || w.Description.Contains(searchString));
             }
             else
             {
-                Excercises = await _repository.GetAll();
+                Excercises = await _unitOfWork.ExcerciseRepository.GetAll();
             }
 
             IEnumerable<Excercise> newList = sortOrder switch
@@ -79,7 +79,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var excercise = await _repository.GetById(id);
+            var excercise = await _unitOfWork.ExcerciseRepository.GetById(id);
 
             if (excercise == null)
             {
@@ -104,9 +104,9 @@ namespace GetFit.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _repository.Add(excercise);
+                await _unitOfWork.ExcerciseRepository.Add(excercise);
 
-                await _repository.SaveChanges();
+                await _unitOfWork.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -121,7 +121,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var excercise = await _repository.GetById(id);
+            var excercise = await _unitOfWork.ExcerciseRepository.GetById(id);
             if (excercise == null)
             {
                 return NotFound();
@@ -147,8 +147,8 @@ namespace GetFit.Web.Controllers
             {
                 try
                 {
-                    _repository.EditAsync(excercise);
-                    await _repository.SaveChanges();
+                    _unitOfWork.ExcerciseRepository.EditAsync(excercise);
+                    await _unitOfWork.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -174,7 +174,7 @@ namespace GetFit.Web.Controllers
                 return NotFound();
             }
 
-            var excercise = await _repository.GetById(id);
+            var excercise = await  _unitOfWork.ExcerciseRepository.GetById(id);
             if (excercise == null)
             {
                 return NotFound();
@@ -188,17 +188,17 @@ namespace GetFit.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var excercise = await _repository.GetById(id);
+            var excercise = await  _unitOfWork.ExcerciseRepository.GetById(id);
 
-            _repository.Remove(excercise);
-            await _repository.SaveChanges();
+             _unitOfWork.ExcerciseRepository.Remove(excercise);
+            await _unitOfWork.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> ExcerciseExistsAsync(int id)
         {
-            var excercises = await _repository.GetAll();
+            var excercises = await  _unitOfWork.ExcerciseRepository.GetAll();
 
             return excercises.Any(e => e.Id == id);
         }
