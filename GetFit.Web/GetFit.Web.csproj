@@ -31,4 +31,5 @@
     <ProjectReference Include="..\GetFit.Infrastructure\GetFit.Infrastructure.csproj" />
   </ItemGroup>
 
+
 </Project>
